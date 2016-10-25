@@ -8,6 +8,8 @@ namespace RADIANCE {
     TMP102();
     ~TMP102();
     double readTemp();
+  private:
+    const float kBitsPerCelsius = 0.0625;
   };
 }
 #endif // RADIANCE_SRC_TMP102_H_

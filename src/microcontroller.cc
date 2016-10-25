@@ -21,7 +21,7 @@ namespace RADIANCE {
       // readInputs();
       // processData();
       // writeOutputs();
-      
+      std::cout << tempSensor.readTemp() << std::endl;
       frame++;
       usleep(1000000);
     }
