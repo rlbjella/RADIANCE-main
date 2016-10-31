@@ -35,7 +35,7 @@ namespace RADIANCE {
 
   // Writes the frame data to a csv file
   void DataManager::WriteMeasurementsToStorage(int frame_counter) {
-    //TODO(e303288): Replace with storage write algorithm
+    //TODO(James): Replace with storage write algorithm
 
   }
 
