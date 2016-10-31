@@ -7,7 +7,7 @@ namespace RADIANCE {
   public:
     TMP102();
     ~TMP102();
-    double readTemp();
+    double readTemperature();
   private:
     const float kBitsPerCelsius = 0.0625;
   };

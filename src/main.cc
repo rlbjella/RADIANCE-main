@@ -1,12 +1,10 @@
 #include "microcontroller.h"
 
 int main() {
-  // Create object
-  RADIANCE::Microcontroller RPi;
-  // Initialize instruments
-  RPi.initialize();
-  // Run system loop
-  RPi.startLoop();
+  // Create object and start the system loop
+  RADIANCE::Microcontroller raspberry_pi;
+  raspberry_pi.Initialize();
+  raspberry_pi.StartLoop();
     
 }
 
