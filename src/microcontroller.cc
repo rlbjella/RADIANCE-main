@@ -1,5 +1,5 @@
 #include "microcontroller.h"
-#include "datamanager.h"
+#include "datahandler.h"
 #include <chrono>
 #include <thread>
 
@@ -28,7 +28,7 @@ namespace RADIANCE {
   // T_Min < T < T_Max -> Set heater voltage based on a TBD algorithm
   // T > T_max -> Set maximum heater voltage
   void Microcontroller::UpdateHeaterVoltage() {
-    int internal_temperature = data_manager_.GetInternalTemperature();
+    int internal_temperature = data_handler_.GetInternalTemperature();
 
     // TODO(James): Find a better way to store these minimums/maximums
     int minimum_temperature = 200;
@@ -63,13 +63,13 @@ namespace RADIANCE {
     while (true) {
 
       // Main system loop
-      data_manager_.ReadSensorData(Microcontroller::frame_counter_);
+      data_handler_.ReadSensorData(Microcontroller::frame_counter_);
 
       // Run the thermal heating algorithm
       UpdateHeaterVoltage();
       
       // Write processed data to storage
-      data_manager_.WriteMeasurementsToStorage(Microcontroller::frame_counter_);
+      data_handler_.WriteMeasurementsToStorage(Microcontroller::frame_counter_);
 
       // Step one frame
       UpdateFrameCounter();

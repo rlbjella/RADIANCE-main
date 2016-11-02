@@ -1,14 +1,14 @@
-#ifndef RADIANCE_SRC_DATAMANAGER_H_
-#define RADIANCE_SRC_DATAMANAGER_H_
+#ifndef RADIANCE_SRC_DATAHANDLER_H_
+#define RADIANCE_SRC_DATAHANDLER_H_
 
 namespace RADIANCE {
-  // DataManager encapsulates the reading->writing process
+  // DataHandler encapsulates the reading->writing process
   // The read functions set the data in the science data struct
-  class DataManager{
+  class DataHandler{
   public:
 
-    DataManager();
-    ~DataManager();
+    DataHandler();
+    ~DataHandler();
     
     // Reads a measurement from each sensor and places it into the
     // science data struct.
@@ -45,4 +45,4 @@ namespace RADIANCE {
   };
 
 } // namespace RADIANCE
-#endif //RADIANCE_SRC_DATAMANAGER_H_
+#endif //RADIANCE_SRC_DATAHANDLER_H_

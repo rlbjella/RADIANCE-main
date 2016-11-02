@@ -1,7 +1,7 @@
 #ifndef RADIANCE_SRC_MICROCONTROLLER_H_
 #define RADIANCE_SRC_MICROCONTROLLER_H_
 
-#include "datamanager.h"
+#include "datahandler.h"
 
 namespace RADIANCE {
   // The main commanding unit. Encapsulates the functions of the Rasperry
@@ -30,7 +30,7 @@ namespace RADIANCE {
     int frame_counter_ = 0;
 
     // Used to handle input/output of data from reading the sensors to storage
-    DataManager data_manager_;
+    DataHandler data_handler_;
 
   };
   
