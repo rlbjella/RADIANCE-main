@@ -1,6 +1,8 @@
 #ifndef RADIANCE_SRC_DATAHANDLER_H_
 #define RADIANCE_SRC_DATAHANDLER_H_
 
+#include "spectrometer.h"
+
 namespace RADIANCE {
   // DataHandler encapsulates the reading->writing process
   // The read functions set the data in the science data struct
@@ -9,6 +11,9 @@ namespace RADIANCE {
 
     DataHandler();
     ~DataHandler();
+    
+    // Setup and configure sensors
+    void Initialize();
     
     // Reads a measurement from each sensor and places it into the
     // science data struct.
@@ -19,11 +24,9 @@ namespace RADIANCE {
     // Writes the science data struct to storage
     void WriteMeasurementsToStorage(int frame_counter);
 
-    int GetInternalTemperature();
-
   private:
-    // Reads spectrometer data into frame data
-    void ReadSpectrometer();
+    // Reads spectrum data into frame data
+    void ReadSpectrum();
 
     // Reads engineering data into frame data
     void ReadInternalTemperature();
@@ -36,12 +39,15 @@ namespace RADIANCE {
     void ReadCamera();
 
     // Structure type to hold all the sensor data for each frame
-    struct frame_data_type_ {
-      int internal_temperature;
+    struct frame_data_type {
+      double spectrum[2];
     };
 
     // Holds the science data for each frame
-    frame_data_type_ frame_data_;
+    frame_data_type frame_data;
+
+    // Sensor data members
+    Spectrometer spectrometer_;
   };
 
 } // namespace RADIANCE

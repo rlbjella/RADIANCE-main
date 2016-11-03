@@ -12,7 +12,7 @@ namespace RADIANCE {
     Microcontroller();
     ~Microcontroller();
 
-    // Setup and configure sensors
+    // Initialize data members
     void Initialize();
 
     // Step one frame
@@ -21,17 +21,14 @@ namespace RADIANCE {
     // Start the system (infinite) loop
     void StartLoop();
 
-    // Change the heater voltage based on the current temperature
-    void UpdateHeaterVoltage();
 
   private:
     // Keeps track of frame number.
     // Resets every 60th frame
-    int frame_counter_ = 0;
+    int frame_counter = 0;
 
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
-
   };
   
 } // namespace RADIANCE
