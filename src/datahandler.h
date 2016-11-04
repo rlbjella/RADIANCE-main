@@ -40,7 +40,7 @@ namespace RADIANCE {
 
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
-      double spectrum[2];
+      double* spectrum;
     };
 
     // Holds the science data for each frame

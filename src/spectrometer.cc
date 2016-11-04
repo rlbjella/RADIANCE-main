@@ -41,7 +41,8 @@ namespace RADIANCE{
   double* Spectrometer::ReadSpectrum() {
     // DEBUG code - for testing with the spectrometer test unit
 
-    double spectrum[2];
+    // TODO: Remove magic number
+    double spectrum[2048];
     unsigned int ticks_count = 5;
     unsigned int* ticks_count_pointer = &ticks_count;
     std::cout << "Measure: " << AVS_Measure(handle_,0,1) << std::endl;

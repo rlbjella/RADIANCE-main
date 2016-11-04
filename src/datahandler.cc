@@ -45,6 +45,12 @@ namespace RADIANCE {
     //TODO(James): Replace with storage write algorithm
     std::ofstream csv_file;
     csv_file.open("file.csv", std::ofstream::app);
+    for (int i=0; i < sizeof(list)/sizeof(list[0]); i++)
+      {
+        csv_file << frame_data.spectrum[i];
+        csv_file << ",";
+
+      }
     csv_file << "New line: " << frame_counter << std::endl;
     csv_file.close();
   }
@@ -52,7 +58,7 @@ namespace RADIANCE {
   // Reads spectrometer data into frame data
   void DataHandler::ReadSpectrum() {
     // DEBUG
-    frame_data.spectrum[2] = *DataHandler::spectrometer_.ReadSpectrum();
+    frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
 
   }
 
