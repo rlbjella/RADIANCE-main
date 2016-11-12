@@ -50,6 +50,7 @@ namespace RADIANCE {
     int num_pixels = 3648;
 
     std::ofstream csv_file;
+<<<<<<< HEAD
 
     csv_file.open("/mnt/FLASHDRIVE/file.csv", std::ofstream::app);
     for (int i=0; i < num_pixels-1;i++) {
@@ -61,11 +62,25 @@ namespace RADIANCE {
     csv_file << std::endl;
     csv_file << std::flush;
     
+=======
+    csv_file.open("file.csv", std::ofstream::app);
+    for (int i=0; i < sizeof(list)/sizeof(list[0]); i++)
+      {
+        csv_file << frame_data.spectrum[i];
+        csv_file << ",";
+
+      }
+    csv_file << "New line: " << frame_counter << std::endl;
+>>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
     csv_file.close();
   }
 
   // Reads spectrometer data into frame data
   void DataHandler::ReadSpectrum() {
+<<<<<<< HEAD
+=======
+    // DEBUG
+>>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
     frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
 
   }
