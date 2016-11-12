@@ -2,6 +2,7 @@
 #define RADIANCE_SRC_DATAHANDLER_H_
 
 #include "spectrometer.h"
+#include "camera.h"
 
 namespace RADIANCE {
   // DataHandler encapsulates the reading->writing process
@@ -39,8 +40,9 @@ namespace RADIANCE {
     void ReadCamera();
 
     // Structure type to hold all the sensor data for each frame
+    // TODO(James): Remove hardcoded values
     struct frame_data_type {
-      double spectrum[2];
+      double *spectrum;
     };
 
     // Holds the science data for each frame
@@ -48,6 +50,7 @@ namespace RADIANCE {
 
     // Sensor data members
     Spectrometer spectrometer_;
+    Camera camera_;
   };
 
 } // namespace RADIANCE

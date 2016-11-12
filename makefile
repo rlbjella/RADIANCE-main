@@ -16,9 +16,9 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)
+INCLUDES = -I $(SRC_PATH) -I /usr/local/include
 # General linker settings
-LINK_FLAGS = -l avs
+LINK_FLAGS = -l avs -l raspicam -L /opt/vc/lib -l mmal -l mmal_core -l mmal_util
 # Additional release-specific linker settings
 RLINK_FLAGS =
 # Additional debug-specific linker settings
