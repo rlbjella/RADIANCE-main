@@ -39,19 +39,7 @@ namespace RADIANCE{
   double* Spectrometer::ReadSpectrum() {
     // DEBUG code - for testing with the spectrometer test unit
 
-<<<<<<< HEAD
     std::cout << "Measuring" << std::endl;
-=======
-    // TODO: Remove magic number
-    double spectrum[2048];
-    unsigned int ticks_count = 5;
-    unsigned int* ticks_count_pointer = &ticks_count;
-    std::cout << "Measure: " << AVS_Measure(handle_,0,1) << std::endl;
-    std::cout << "Starting measurement" << std::endl;
-    while (!AVS_PollScan(handle_)) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      AVS_GetScopeData(handle_,ticks_count_pointer,spectrum);
->>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
 
     unsigned short num_pixels;
     if (AVS_GetNumPixels(handle_,&num_pixels)!=ERR_SUCCESS) {
