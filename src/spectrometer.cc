@@ -9,61 +9,46 @@ namespace RADIANCE{
 
   void Spectrometer::Initialize() {
     
-    // DEBUG code - for testing with the spectrometer test unit
-    unsigned int byte_set;
 
-    AvsIdentityType a_plist[30];
-
-    // init the library, the parameter is type of interface.
+    // Init the library, the parameter is type of interface.
     // 0 for USB
-    // 1..255 com port (not support in the linux library, only in the windows DLL)
-    // 256 Ethernet auto search.
     int n = AVS_Init(0);
 
+    // Find available devices
     std::cout << "USB spectrometers found: " << AVS_GetNrOfDevices() << std::endl;
-
-    n = AVS_GetList( sizeof(a_plist), &byte_set, a_plist );
+    // Parameters for calling AVS_GetList()
+    unsigned int byte_set;
+    AvsIdentityType a_plist[30];
+    n = AVS_GetList(sizeof(a_plist), &byte_set, a_plist );
     
-    int err = 0;
+    // Retrieve handle
+    handle_ = AVS_Activate(&a_plist[0]);
 
-    handle_ = AVS_Activate( &a_plist[0] );
-
-    std::cout << "Test spectrometer: " << a_plist[0].SerialNumber << std::endl;
-
+    // Set the ADC to high res mode
     AVS_UseHighResAdc(handle_,1);
 
   }
 
 
-  // Reads the spectrum with the setup handle. First calls AVS_Measure which starts the read and then waits until a spectrum is ready. Then reads
-  double* Spectrometer::ReadSpectrum() {
+  // Reads the spectrum with the setup handle. First calls AVS_Measure which starts the read and then waits until a spectrum is ready. Then reads using GetScopeData()
+  float* Spectrometer::ReadSpectrum() {
+
     // DEBUG code - for testing with the spectrometer test unit
-
-<<<<<<< HEAD
     std::cout << "Measuring" << std::endl;
-=======
-    // TODO: Remove magic number
-    double spectrum[2048];
-    unsigned int ticks_count = 5;
-    unsigned int* ticks_count_pointer = &ticks_count;
-    std::cout << "Measure: " << AVS_Measure(handle_,0,1) << std::endl;
-    std::cout << "Starting measurement" << std::endl;
-    while (!AVS_PollScan(handle_)) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      AVS_GetScopeData(handle_,ticks_count_pointer,spectrum);
->>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
 
+    // Retrieve number of pixels
     unsigned short num_pixels;
     if (AVS_GetNumPixels(handle_,&num_pixels)!=ERR_SUCCESS) {
       std::cout << "Err in getting num_pixels: " << AVS_GetNumPixels(handle_,&num_pixels) << std::endl;
     }
 
     // Configure the measurement
+    // TODO: Put this in Init()
     MeasConfigType meas_config;
 
     // General parameters
     meas_config.m_StartPixel 			= 0;
-    meas_config.m_StopPixel 			= (char) (num_pixels - 1);
+    meas_config.m_StopPixel 			= (num_pixels - 1);
     meas_config.m_IntegrationTime		= 100;
     meas_config.m_IntegrationDelay		= 0;
     meas_config.m_NrAverages			= 1;
@@ -96,30 +81,29 @@ namespace RADIANCE{
       std::cout << "Err in PrepareMeasure" << std::endl;
     }
 
+    // Signal to start the measurement
     if (AVS_Measure(handle_,0,1)!=ERR_SUCCESS) {
       std::cout << "Err in Measure" << std::endl;
     }
 
+    std::fill_n(d_spectrum,num_pixels,0);
+    // Wait for the measurement to complete
     while (AVS_PollScan(handle_)!=1) {
-      // std::cout << "Waiting for measurement" << std::endl; // DEBUG
-      std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    double spectrum[num_pixels];
 
-    // Time since the spectrometer started(10 microsecond units)
-    unsigned int ticks;
-
-    std::fill_n(spectrum,num_pixels,0.0);
-
-    if (AVS_GetScopeData(handle_,&ticks,spectrum)!=ERR_SUCCESS) {
+    // Get spectrum
+    if (AVS_GetLambda(handle_,d_spectrum)!=ERR_SUCCESS) {
       std::cout << "Err in GetScopeData" << std::endl;
     }
 
-    std::cout << std::endl;
+    // Convert spectrum to floats for data storage
+    for (int i=0; i < num_pixels; i++) {
+      f_spectrum[i] = (float) d_spectrum[i];
+    }
 
-    return spectrum;
-
+    return f_spectrum;
 
   }
   

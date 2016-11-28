@@ -14,10 +14,16 @@ namespace RADIANCE {
     void Initialize();
 
     // Read a spectrom
-    double* ReadSpectrum();
+    float* ReadSpectrum();
 
   private:
     AvsHandle handle_;
+
+    // Avantes library requires double array so use for measuring
+    double d_spectrum[3648];
+
+    // Convert double spectrum to float array to save data storage
+    float f_spectrum[3648];
     
   };
   

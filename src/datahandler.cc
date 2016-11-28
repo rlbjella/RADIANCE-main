@@ -49,38 +49,20 @@ namespace RADIANCE {
     //TODO(James): Replace with storage write algorithm
     int num_pixels = 3648;
 
-    std::ofstream csv_file;
-<<<<<<< HEAD
+    FILE* pFile;
+    pFile = fopen("/mnt/FLASHDRIVE/datafile", "wb");
 
-    csv_file.open("/mnt/FLASHDRIVE/file.csv", std::ofstream::app);
-    for (int i=0; i < num_pixels-1;i++) {
-      csv_file << frame_data.spectrum[i];
-      if (i != num_pixels-1) {
-          csv_file << ",";
-        }
-     }
-    csv_file << std::endl;
-    csv_file << std::flush;
+    std::cout << sizeof(float) << "," << num_pixels << std::endl;
+    std::cout << frame_data.spectrum[3647] << std::endl;
+    fwrite(frame_data.spectrum, sizeof(float), num_pixels, pFile);
     
-=======
-    csv_file.open("file.csv", std::ofstream::app);
-    for (int i=0; i < sizeof(list)/sizeof(list[0]); i++)
-      {
-        csv_file << frame_data.spectrum[i];
-        csv_file << ",";
-
-      }
-    csv_file << "New line: " << frame_counter << std::endl;
->>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
-    csv_file.close();
+    fflush(pFile);
+    fclose(pFile);
   }
 
   // Reads spectrometer data into frame data
   void DataHandler::ReadSpectrum() {
-<<<<<<< HEAD
-=======
     // DEBUG
->>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
     frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
 
   }
@@ -94,7 +76,6 @@ namespace RADIANCE {
 
   // Reads camera data into frame data
   void DataHandler::ReadCamera() {
-    
     camera_.ReadImage();
   }
  

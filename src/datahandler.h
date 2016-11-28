@@ -42,11 +42,7 @@ namespace RADIANCE {
     // Structure type to hold all the sensor data for each frame
     // TODO(James): Remove hardcoded values
     struct frame_data_type {
-<<<<<<< HEAD
-      double *spectrum;
-=======
-      double* spectrum;
->>>>>>> 7b55c037ec580d0375c9cf8a7874464ba4e187d3
+      float* spectrum;
     };
 
     // Holds the science data for each frame

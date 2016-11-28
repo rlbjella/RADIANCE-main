@@ -1,7 +1,7 @@
 #ifndef RADIANCE_SRC_CAMERA_H_
 #define RADIANCE_SRC_CAMERA_H_
 
-#include "raspicam_still.h"
+#include "../include/raspicam/raspicam_still.h"
 namespace RADIANCE {
   // Encapsulates the camera configuration and reading
   class Camera {
