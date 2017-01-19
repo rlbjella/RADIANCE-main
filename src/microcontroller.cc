@@ -13,7 +13,6 @@ namespace RADIANCE {
     //DEBUG
     std::cout << "Initializing" << std::endl;
     data_handler_.Initialize();
-    // TODO(James): Setup sensors
   }
 
   // Steps one frame

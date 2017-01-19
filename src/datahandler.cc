@@ -45,16 +45,13 @@ namespace RADIANCE {
 
   // Writes the frame data to a csv file
   void DataHandler::WriteMeasurementsToStorage(int frame_counter) {
-    
-    //TODO(James): Replace with storage write algorithm
-    int num_pixels = 3648;
 
     FILE* pFile;
     pFile = fopen("/mnt/FLASHDRIVE/datafile", "wb");
 
-    std::cout << sizeof(float) << "," << num_pixels << std::endl;
+    std::cout << sizeof(float) << "," << kNumSpectrumPixels << std::endl;
     std::cout << frame_data.spectrum[3647] << std::endl;
-    fwrite(frame_data.spectrum, sizeof(float), num_pixels, pFile);
+    fwrite(frame_data.spectrum, sizeof(float), kNumSpectrumPixels, pFile);
     
     fflush(pFile);
     fclose(pFile);

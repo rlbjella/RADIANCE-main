@@ -39,8 +39,10 @@ namespace RADIANCE {
     // Reads camera data into frame data
     void ReadCamera();
 
+    // Number of detector elements in the spectrometer
+    const int kNumSpectrumPixels = 3648;
+
     // Structure type to hold all the sensor data for each frame
-    // TODO(James): Remove hardcoded values
     struct frame_data_type {
       float* spectrum;
     };
