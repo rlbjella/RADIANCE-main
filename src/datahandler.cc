@@ -1,13 +1,11 @@
 #include "datahandler.h"
 #include "microcontroller.h"
-#include "spectrometer.h"
 #include "../include/avaspec/avaspec.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <iostream>
 #include <fstream>
 #include <thread>
-#include "camera.h"
 
 namespace RADIANCE {
   DataHandler::DataHandler() {}
@@ -30,50 +28,91 @@ namespace RADIANCE {
     DataHandler::ReadSpectrum();
 
     // Read housekeeping(engineering) sensors
+    DataHandler::ReadInternalTemperature();
     DataHandler::ReadExternalTemperature();
     DataHandler::ReadHumidity();
-    DataHandler::ReadPressure();
-    DataHandler::ReadInternalTemperature();
     DataHandler::ReadAttitude();
 
     // Take a picture every 60 frames
-    //DEBUG
-    // if (frame_counter==59) {
+    if (frame_counter==59) {
     DataHandler::ReadCamera();
-    // }
+    }
   }
 
   // Writes the frame data to a csv file
   void DataHandler::WriteMeasurementsToStorage(int frame_counter) {
 
-    FILE* pFile;
-    pFile = fopen("/mnt/FLASHDRIVE/datafile", "wb");
+    // Write sensor measurements
+    FILE* open_file;
+    open_file = fopen("/mnt/FLASHDRIVE/datafile", "wb");
 
-    std::cout << sizeof(float) << "," << kNumSpectrumPixels << std::endl;
-    std::cout << frame_data.spectrum[3647] << std::endl;
-    fwrite(frame_data.spectrum, sizeof(float), kNumSpectrumPixels, pFile);
-    
-    fflush(pFile);
-    fclose(pFile);
+    fwrite(frame_data.spectrum, sizeof(float), kNumSpectrumPixels, open_file);
+    fwrite(frame_data.upper_battery_temperature, sizeof(float), 1, open_file);
+    fwrite(frame_data.lower_battery_temperature, sizeof(float), 1, open_file);
+    fwrite(frame_data.storage_battery_temperature, sizeof(float), 1, open_file);
+    fwrite(frame_data.external_temperature, sizeof(float), 1, open_file);
+    fwrite(frame_data.humidity, sizeof(float), 1, open_file);
+    fwrite(frame_data.attitude, sizeof(float), k, open_file);
+
+    // Flush the buffers before writing and then close the buffer
+    fflush(open_file);
+    fclose(open_file);
+
+    // Write camera images
+    FILE* open_file;
+    open_file = fopen("/mnt/FLASHDRIVE/camerafile", "wb");
+    fwrite(frame_data.image, sizeof(float), kImageSize, open_file);
+
+    // Flush the buffers before writing and then close the buffer
+    fflush(open_file);
+    fclose(open_file);
+
   }
+
+  // Write camera image to drive without using binary file
+  // Discontinued
+  // void DataHandler::WriteCameraImage(){
+
+  //   // Write to file
+  //   static char name[27];
+  //   time_t now = time(0);
+  //   strftime(name, sizeof(name), "/mnt/FLASHDRIVE/%s", localtime(&now));
+
+  //   std::ofstream outFile(name,std::ios::binary);
+
+  //   outFile.write((char*)image_data,raspicam_still_.getImageBufferSize());
+  //   outFile << std::flush;
+  // }
 
   // Reads spectrometer data into frame data
   void DataHandler::ReadSpectrum() {
-    // DEBUG
     frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
-
   }
 
   // Reads engineering data into frame data
-  void DataHandler::ReadInternalTemperature() {}
-  void DataHandler::ReadExternalTemperature() {}
-  void DataHandler::ReadHumidity() {}
-  void DataHandler::ReadPressure() {}
-  void DataHandler::ReadAttitude() {}
+  void DataHandler::ReadInternalTemperature() {
+    frame_data.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
+    frame_data.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
+    frame_data.storage_temperature = storage_temperature_sensor.ReadTemperature();
+  }
+
+  //Reads a measurement from the external temperature sensor
+  void DataHandler::ReadExternalTemperature() {
+    frame_data.external_temperature = external_temperature_sensor_.ReadTemperature();
+  }
+  // Reads a measurement from the humidity sensor
+  void DataHandler::ReadHumidity() {
+    frame_data.humidity = humidity_sensor_.ReadHumidity();
+  }
+
+  // Takes a measurement from the attitude determination photodiodes
+  void DataHandler::ReadAttitude() {
+    frame_data.attitude = attitude_sensor_.ReadAttitude();
+  }
 
   // Reads camera data into frame data
   void DataHandler::ReadCamera() {
-    camera_.ReadImage();
+    frame_data.image = camera_.ReadImage();
   }
  
 }
