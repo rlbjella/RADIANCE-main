@@ -1,6 +1,6 @@
 #ifndef RADIANCE_SRC_SPECTROMETER_H_
 #define RADIANCE_SRC_SPECTROMETER_H_
-#include "../include/avaspec/avaspec.h"
+#include "../../include/avaspec/avaspec.h"
 
 namespace RADIANCE {
   // Encapsulates the spectrometer configuration and reading
