@@ -14,7 +14,9 @@ namespace RADIANCE {
     void Initialize();
 
     // Read a spectrom
-    void ReadImage();
+    unsigned char* ReadImage();
+
+    int GetImageSize();
 
   private:
     // Raspberry Pi Camera library for grabbing images
@@ -23,6 +25,9 @@ namespace RADIANCE {
     // Camera sensor data
     unsigned char* image_data;
     
+    // Camera image size, set in call to Initialize
+    int image_size;
+
   };
   
 } // namespace RADIANCE

@@ -5,7 +5,6 @@
 #include <fstream>
 #include <thread>
 #include <chrono>
-#include "../include/raspicam/raspicam_still.h"
 
 namespace RADIANCE{
   Camera::Camera() {}
@@ -24,17 +23,24 @@ namespace RADIANCE{
 
     // Let the camera stabilize
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+
+    image_size = raspicam_still_.getImageBufferSize();
+  }
+
+  // image_size getter
+  int Camera::GetImageSize() {
+    return image_size;
   }
 
   // Reads and writes the camera image
   unsigned char* Camera::ReadImage() {
     // Allocate image buffer
-    image_data=new unsigned char[raspicam_still_.getImageBufferSize()];
+    image_data=new unsigned char[image_size];
 
     // Retrieve the image in rgb format
-    raspicam_still_.grab_retrieve(image_data,raspicam_still_.getImageBufferSize());
+    raspicam_still_.grab_retrieve(image_data,image_size);
 
-    return image_data
+    return image_data;
   }
   
 }

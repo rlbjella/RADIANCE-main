@@ -16,14 +16,20 @@ namespace RADIANCE {
     // Read a spectrom
     float* ReadSpectrum();
 
+    // Getter for num_pixels
+    int GetNumPixels();
+
   private:
     AvsHandle handle_;
 
+    // Number of spectrometer elements
+    static const int num_pixels = 3648;
+
     // Avantes library requires double array so use for measuring
-    double d_spectrum[3648];
+    double d_spectrum[num_pixels];
 
     // Convert double spectrum to float array to save data storage
-    float f_spectrum[3648];
+    float f_spectrum[num_pixels];
     
   };
   

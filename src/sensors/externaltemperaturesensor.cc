@@ -2,9 +2,9 @@
 
 namespace RADIANCE{
   // TODO(James)
-  ExternalTemperatureSensor::Initialize() {}
+  void ExternalTemperatureSensor::Initialize() {}
   // TODO(James)
-  ExternalTemperatureSensor::ReadTemperature() {
+  float ExternalTemperatureSensor::ReadTemperature() {
     return 0.1f;
   }
 }

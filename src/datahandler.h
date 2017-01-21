@@ -4,7 +4,7 @@
 #include "sensors/spectrometer.h"
 #include "sensors/internaltemperaturesensor.h"
 #include "sensors/externaltemperaturesensor.h"
-#include "sensors/humditysensor.h"
+#include "sensors/humiditysensor.h"
 #include "sensors/attitudesensor.h"
 #include "sensors/camera.h"
 
@@ -42,12 +42,6 @@ namespace RADIANCE {
     // Reads camera data into frame data
     void ReadCamera();
 
-    // Number of detector elements in the spectrometer
-    const int kNumSpectrumPixels = 3648;
-
-    // Size of the camera image
-    const int kNumSpectrumPixels = 10000;
-
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
       float* spectrum;
@@ -71,7 +65,7 @@ namespace RADIANCE {
     InternalTemperatureSensor lower_battery_temperature_sensor_;
     InternalTemperatureSensor storage_temperature_sensor_;
     ExternalTemperatureSensor external_temperature_sensor_;
-    AttitudeSensor attitude_sensor;
+    AttitudeSensor attitude_sensor_;
 
   };
 

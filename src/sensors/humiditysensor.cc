@@ -1,10 +1,10 @@
 #include "humiditysensor.h"
 
 namespace RADIANCE{
-  HumiditySensor::Initialize() {
+  void HumiditySensor::Initialize() {
   }
 
-  HumiditySensor::ReadHumidity(){
+  float HumiditySensor::ReadHumidity(){
     // DEBUG
     return 0.1f;
   }
