@@ -5,17 +5,13 @@
 #include <thread>
 
 namespace RADIANCE {
-  Microcontroller::Microcontroller() {}
-  Microcontroller::~Microcontroller() {}
 
-  // Setup and configure sensors
+  // Setup and configure sensors by calling Data Handler instance
   void Microcontroller::Initialize() {
-    //DEBUG
-    std::cout << "Initializing" << std::endl;
     data_handler_.Initialize();
   }
 
-  // Steps one frame
+  // Steps one frame. Resets if frame counter is zero
   void Microcontroller::UpdateFrameCounter() {
 
     if (Microcontroller::frame_counter==59) {
@@ -57,7 +53,7 @@ namespace RADIANCE {
       if (ms < std::chrono::milliseconds(1000)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000)-ms);
       } else{
-        std::cout << "Could not finish in 1 second" << std::endl;
+        std::cout << "Could not finish in 1 second" << std::endl; // DEBUG
       }
 
 

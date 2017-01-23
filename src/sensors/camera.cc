@@ -25,6 +25,8 @@ namespace RADIANCE{
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
     image_size = raspicam_still_.getImageBufferSize();
+    std::cout << "Image size" << image_size << std::endl; // DEBUG
+    
   }
 
   // image_size getter

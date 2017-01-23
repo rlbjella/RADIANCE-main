@@ -103,7 +103,7 @@ namespace RADIANCE{
     // }
 
     // Convert spectrum to floats for data storage
-    for (int i=0; i < num_pixels-1; i++) {
+    for (int i=0; i < num_pixels; i++) {
       f_spectrum[i] = (float) 0;
     }
     return f_spectrum;

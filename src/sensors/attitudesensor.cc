@@ -5,6 +5,6 @@ namespace RADIANCE{
   void AttitudeSensor::Initialize() {}
   // TODO(James)
   float AttitudeSensor::ReadAttitude() {
-    return 0.0f;
+    return 0.1f;
   }
 }

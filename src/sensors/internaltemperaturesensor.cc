@@ -5,6 +5,6 @@ namespace RADIANCE{
   void InternalTemperatureSensor::Initialize() {}
   // TODO(James)
   float InternalTemperatureSensor::ReadTemperature() {
-    return 0.0f;
+    return 0.1f;
   }
 }

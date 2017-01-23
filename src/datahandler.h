@@ -9,14 +9,11 @@
 #include "sensors/camera.h"
 
 namespace RADIANCE {
-  // DataHandler encapsulates the reading->writing process
+  // DataHandler encapsulates the data transfer process
   // The read functions set the data in the science data struct
   class DataHandler{
   public:
 
-    DataHandler();
-    ~DataHandler();
-    
     // Setup and configure sensors
     void Initialize();
     
@@ -27,6 +24,8 @@ namespace RADIANCE {
     void ReadSensorData(int frame_counter);
 
     // Writes the science data struct to storage
+    // Inputs: 
+    // frame_counter: Used to determine a picture needs to be written
     void WriteMeasurementsToStorage(int frame_counter);
 
   private:
@@ -45,13 +44,13 @@ namespace RADIANCE {
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
       float* spectrum;
-      unsigned char* image;
       float humidity;
       float upper_battery_temperature;
       float lower_battery_temperature;
       float storage_temperature;
       float external_temperature;
       float attitude;
+      unsigned char* image;
     };
 
     // Holds the science data for each frame
@@ -59,13 +58,13 @@ namespace RADIANCE {
 
     // Sensor data members
     Spectrometer spectrometer_;
-    Camera camera_;
     HumiditySensor humidity_sensor_;
     InternalTemperatureSensor upper_battery_temperature_sensor_;
     InternalTemperatureSensor lower_battery_temperature_sensor_;
     InternalTemperatureSensor storage_temperature_sensor_;
     ExternalTemperatureSensor external_temperature_sensor_;
     AttitudeSensor attitude_sensor_;
+    Camera camera_;
 
   };
 

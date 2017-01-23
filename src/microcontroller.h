@@ -4,15 +4,12 @@
 #include "datahandler.h"
 
 namespace RADIANCE {
-  // The main commanding unit. Encapsulates the functions of the Rasperry
-  // Pi 3. Handles the system infinite loop
+    // The main commanding unit. Encapsulates the command
+    // functions of the Rasperry Pi 3. 
   class Microcontroller {
   public:
-    
-    Microcontroller();
-    ~Microcontroller();
 
-    // Initialize data members
+    // Setup and configure sensors
     void Initialize();
 
     // Step one frame
