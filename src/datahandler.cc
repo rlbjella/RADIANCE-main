@@ -3,27 +3,39 @@
 #include "../include/avaspec/avaspec.h"
 #include <stdio.h>
 #include <sys/types.h>
-#include <iostream>
-#include <fstream>
 #include <thread>
 
 namespace RADIANCE {
-  // Setup and configure each sensor
   void DataHandler::Initialize() {
+
+    // Setup and configure each sensor
     spectrometer_.Initialize();
     humidity_sensor_.Initialize();
-    upper_battery_temperature_sensor_.Initialize()
-    lower_battery_temperature_sensor_.Initialize()
-    external_temperature_sensor_.Initialize()  
-    attitude_sensor_.Initialize()
+    upper_battery_temperature_sensor_.Initialize();
+    lower_battery_temperature_sensor_.Initialize();
+    external_temperature_sensor_.Initialize();
+    attitude_sensor_.Initialize();
     camera_.Initialize();
+
+    // Setup and configure measurement storage
+    // Open file objects in binary append mode
+    // C file utilities are used for performance
+    slc_data_file = fopen("datafile", "ab"); // DEBUG 
+    // slc_data_file = fopen("/mnt/slcdrive/datafile", "ab");
+    // mlc1_data_file = fopen("/mnt/mlcdrive1/datafile", "ab");
+    // mlc2_data_file = fopen("/mnt/mlcdrive2/datafile", "ab");
+
+    mlc1_image_file = fopen("imagefile", "ab"); //DEBUG
+    // mlc1_image_file = fopen("/mnt/mlcdrive1/imagefile", "ab");
+    // mlc2_image_file = fopen("/mnt/mlcdrive2/imagefile", "ab");
+
   }
 
   // Reads a measurement from each sensor and places it into the
   // science data struct.
   // Inputs: 
   // frame_counter: Used to determine whether a picture is needed
-  void DataHandler::ReadSensorData(int frame_counter) {
+  void DataHandler::ReadSensorData(const int frame_counter) {
     
     // Spectrometer is the most important so measure first
     DataHandler::ReadSpectrum();
@@ -43,39 +55,49 @@ namespace RADIANCE {
   // Writes the frame data to a csv file
   // Inputs: 
   // frame_counter: Used to determine a picture needs to be written
-  void DataHandler::WriteMeasurementsToStorage(int frame_counter) {
+  void DataHandler::WriteFrameToStorage(const int frame_counter) {
 
-    // Open file object and binary write to it
-    // C file utilities is used for speed
-    FILE* data_file;
+    // Writes the data(measurements) to all three drives every second
+    WriteDataToFile(slc_data_file);
+    // WriteDataToFile(&mlc1_data_file); // DEBUG
+    // WriteDataToFile(&mlc2_data_file); // DEBUG
 
-    // data_file = fopen("/mnt/FLASHDRIVE/datafile", "wb");
-    data_file = fopen("datafile", "ab"); // DEBUG
+    // Write a picture to just the MLC drives every minute
+    // if (frame_counter==59) {
+    WriteImagesToFile(mlc1_image_file);
+    // WriteImagesToFile(&mlc2_image_file); // DEBUG
+    // }
+  }
 
-    // Write the data
-    fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.external_temperature), sizeof(float), 1, data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.humidity), sizeof(float), 1, data_file);
-    fwrite(reinterpret_cast<char*>(&frame_data.attitude), sizeof(float), 1, data_file);
+  // Writes the frame data to the given file
+  // Inputs:
+  // file: The C file object to write to
+  void DataHandler::WriteDataToFile(FILE* file) {
+    
+    // Write the engineering/housekeeping measurements to the given file
+    fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);
+    fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.external_temperature), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.humidity), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.attitude), sizeof(float), 1, file);
 
-    // Flush the buffers before writing and then close the buffer
-    fflush(data_file);
-    fclose(data_file);
+    // Flush the buffers after each write
+    fflush(file);
+  }
+  
 
-    // TODO: Update with multiple flash drive
-    // Write image measurements
-    FILE* image_file;
-    // image_file = fopen("/mnt/FLASHDRIVE/imagefile", "wb");
-    image_file = fopen("imagefile", "ab"); // DEBUG
-    fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), image_file);
+  // Writes the images to the given file
+  // Inputs: 
+  // file: The C file object to write to
+  void DataHandler::WriteImagesToFile(FILE* file) {
 
-    // Flush the buffers before writing and then close the buffer
-    fflush(image_file);
-    fclose(image_file);
+    // Write image to the given file
+    fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), file);
 
+    // Flush the buffers after each write
+    fflush(file);
   }
 
   // Reads spectrometer data into frame data

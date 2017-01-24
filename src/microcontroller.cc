@@ -23,7 +23,8 @@ namespace RADIANCE {
   }
 
   // Start the system (infinite) loop 
-  // General flow: Read -> Write -> Sleep;
+  // System process is the following: Read -> Write -> Sleep; time
+  // taken is also calculated
   void Microcontroller::StartLoop() {
 
     // System loop
@@ -37,7 +38,7 @@ namespace RADIANCE {
       data_handler_.ReadSensorData(Microcontroller::frame_counter);
       
       // Write processed data to storage
-      data_handler_.WriteMeasurementsToStorage(Microcontroller::frame_counter);
+      data_handler_.WriteFrameToStorage(Microcontroller::frame_counter);
 
       // Step one frame
       UpdateFrameCounter();
