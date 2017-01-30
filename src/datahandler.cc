@@ -6,6 +6,7 @@
 #include <thread>
 
 namespace RADIANCE {
+
   void DataHandler::Initialize() {
 
     // Setup and configure each sensor
@@ -52,6 +53,11 @@ namespace RADIANCE {
     // }
   }
 
+  // Sets heater output based on the information in frame_data
+  void DataHandler::SetThermalControl() {
+
+  }
+
   // Writes the frame data to a csv file
   // Inputs: 
   // frame_counter: Used to determine a picture needs to be written
@@ -62,7 +68,7 @@ namespace RADIANCE {
     // WriteDataToFile(&mlc1_data_file); // DEBUG
     // WriteDataToFile(&mlc2_data_file); // DEBUG
 
-    // Write a picture to just the MLC drives every minute
+    // Write an image to just the MLC drives every minute
     // if (frame_counter==59) {
     WriteImagesToFile(mlc1_image_file);
     // WriteImagesToFile(&mlc2_image_file); // DEBUG

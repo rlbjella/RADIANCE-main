@@ -1,5 +1,5 @@
-#ifndef RADIANCE_SRC_ATTITUDESENSOR_H_
-#define RADIANCE_SRC_ATTITUDESENSOR_H_
+#ifndef RADIANCE_SRC_SENSORS_ATTITUDESENSOR_H_
+#define RADIANCE_SRC_SENSORS_ATTITUDESENSOR_H_
 namespace RADIANCE {
 
   // Class for initializing and reading measurements from the attitude determination photodiodes
@@ -14,4 +14,4 @@ namespace RADIANCE {
   };    
       
 }
-#endif // RADIANCE_SRC_ATTITUDESENSOR_H_
+#endif // RADIANCE_SRC_SENSORS_ATTITUDESENSOR_H_

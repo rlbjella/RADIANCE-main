@@ -18,10 +18,13 @@ namespace RADIANCE {
 
     // Setup and configure sensors
     void Initialize();
-    
+
     // Reads a measurement from each sensor and places it into the
     // science data struct.
     void ReadSensorData(const int frame_counter);
+
+    // Process the measured data and then write the heater output
+    void SetThermalControl();
 
     // Writes the science data struct to storage
     void WriteFrameToStorage(const int frame_counter);

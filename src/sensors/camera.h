@@ -1,5 +1,5 @@
-#ifndef RADIANCE_SRC_CAMERA_H_
-#define RADIANCE_SRC_CAMERA_H_
+#ifndef RADIANCE_SRC_SENSORS_CAMERA_H_
+#define RADIANCE_SRC_SENSORS_CAMERA_H_
 
 #include "../../include/raspicam/raspicam_still.h"
 namespace RADIANCE {
@@ -31,4 +31,4 @@ namespace RADIANCE {
   };
   
 } // namespace RADIANCE
-#endif //RADIANCE_SRC_CAMERA_H_
+#endif //RADIANCE_SRC_SENSORS_CAMERA_H_

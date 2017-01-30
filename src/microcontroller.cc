@@ -36,7 +36,10 @@ namespace RADIANCE {
 
       // Main system loop
       data_handler_.ReadSensorData(Microcontroller::frame_counter);
-      
+
+      // Update the heater output
+      data_handler_.SetThermalControl();
+
       // Write processed data to storage
       data_handler_.WriteFrameToStorage(Microcontroller::frame_counter);
 

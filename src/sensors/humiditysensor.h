@@ -1,5 +1,5 @@
-#ifndef RADIANCE_SRC_HUMIDITYSENSOR_H_
-#define RADIANCE_SRC_HUMIDITYSENSOR_H_
+#ifndef RADIANCE_SRC_SENSORS_HUMIDITYSENSOR_H_
+#define RADIANCE_SRC_SENSORS_HUMIDITYSENSOR_H_
 namespace RADIANCE {
 
   // Class for interacting with the TE HPP804B130 humidity sensor
@@ -14,4 +14,4 @@ namespace RADIANCE {
   };    
       
 }
-#endif // RADIANCE_SRC_HUMIDITYSENSOR_H_
+#endif // RADIANCE_SRC_SENSORS_HUMIDITYSENSOR_H_
