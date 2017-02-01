@@ -15,17 +15,17 @@ make
 ```
 
 # Installation
-Add the executable to be started on boot:
+- Add the executable to be started on boot:
 
 ```
 mv radiance /etc/init.d/radiance
 chmod 755 /etc/init.d/radiance
 update-rc.d radiance defaults
 ```
+- Add a Cron job to check every 5 minutes and run if not already running
 
-Make sure the partition is formatted with a journaled partition like ext3. The journaling mode should be selected for maximum write safety.
+- Make sure the partition is formatted with a journaled partition like ext3. The journaling mode should be selected for maximum write safety.
 
-Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
+- Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
 
-Mount the USB drive(s) with journaling and sync enabled:
-
+- Mount the USB drive(s) with journaling and sync enabled
