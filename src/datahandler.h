@@ -2,6 +2,7 @@
 #define RADIANCE_SRC_DATAHANDLER_H_
 
 #include "sensors/spectrometer.h"
+#include "sensors/rpitemperaturesensor.h"
 #include "sensors/internaltemperaturesensor.h"
 #include "sensors/externaltemperaturesensor.h"
 #include "sensors/humiditysensor.h"
@@ -34,11 +35,13 @@ namespace RADIANCE {
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
       float* spectrum;
-      float humidity;
+      float spectrometer_temperature;
+      float rpi_temperature;
       float upper_battery_temperature;
       float lower_battery_temperature;
       float storage_temperature;
       float external_temperature;
+      float humidity;
       float attitude;
       unsigned char* image;
     };
@@ -49,6 +52,7 @@ namespace RADIANCE {
     // Sensor data members
     Spectrometer spectrometer_;
     HumiditySensor humidity_sensor_;
+    RPiTemperatureSensor rpi_temperature_sensor_;
     InternalTemperatureSensor upper_battery_temperature_sensor_;
     InternalTemperatureSensor lower_battery_temperature_sensor_;
     InternalTemperatureSensor storage_temperature_sensor_;
@@ -75,6 +79,8 @@ namespace RADIANCE {
 
     // These functions read the measurements into the frame data struct
     void ReadSpectrum();
+    void ReadSpectrometerTemperature();
+    void ReadRPiTemperature();
     void ReadInternalTemperature();
     void ReadExternalTemperature();
     void ReadHumidity();

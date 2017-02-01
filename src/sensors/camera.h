@@ -6,9 +6,6 @@ namespace RADIANCE {
   // Encapsulates the camera configuration and reading
   class Camera {
   public:
-    
-    Camera();
-    ~Camera();
 
     // Setup and configure the camera
     void Initialize();
@@ -16,6 +13,7 @@ namespace RADIANCE {
     // Read a spectrom
     unsigned char* ReadImage();
 
+    // Getter for image_size
     int GetImageSize();
 
   private:
@@ -24,7 +22,7 @@ namespace RADIANCE {
 
     // Camera sensor data
     unsigned char* image_data;
-    
+
     // Camera image size, set in call to Initialize
     int image_size;
 

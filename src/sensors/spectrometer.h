@@ -16,6 +16,9 @@ namespace RADIANCE {
     // Getter for num_pixels
     int GetNumPixels();
 
+    // Return spectrometer temperature
+    float ReadSpectrometerTemperature();
+
   private:
     // Number of spectrometer elements
     static const int num_pixels = 2048;
@@ -28,6 +31,9 @@ namespace RADIANCE {
 
     // Convert double spectrum to float array to save data storage
     float f_spectrum[num_pixels];
+
+    // Converts the voltage into a temperature
+    float ConvertVoltageToTemperature(float voltage);
 
   };
 

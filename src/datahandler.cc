@@ -12,6 +12,7 @@ namespace RADIANCE {
     // Setup and configure each sensor
     spectrometer_.Initialize();
     humidity_sensor_.Initialize();
+    // rpi_temperature_sensor_.Initialize(); // RPi temperature sensor does no require initialization
     upper_battery_temperature_sensor_.Initialize();
     lower_battery_temperature_sensor_.Initialize();
     external_temperature_sensor_.Initialize();
@@ -42,6 +43,8 @@ namespace RADIANCE {
     DataHandler::ReadSpectrum();
 
     // Read housekeeping(engineering) sensors
+    DataHandler::ReadSpectrometerTemperature();
+    DataHandler::ReadRPiTemperature();
     DataHandler::ReadInternalTemperature();
     DataHandler::ReadExternalTemperature();
     DataHandler::ReadHumidity();
@@ -79,9 +82,11 @@ namespace RADIANCE {
   // Inputs:
   // file: The C file object to write to
   void DataHandler::WriteDataToFile(FILE* file) {
-    
+
     // Write the engineering/housekeeping measurements to the given file
     fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);
+    fwrite(reinterpret_cast<char*>(&frame_data.spectrometer_temperature), sizeof(float), 1, file);
+    fwrite(reinterpret_cast<char*>(&frame_data.rpi_temperature), sizeof(float), 1, file);
     fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);
     fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, file);
     fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, file);
@@ -92,7 +97,7 @@ namespace RADIANCE {
     // Flush the buffers after each write
     fflush(file);
   }
-  
+
 
   // Writes the images to the given file
   // Inputs: 
@@ -111,7 +116,17 @@ namespace RADIANCE {
     frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
   }
 
-  // Reads engineering data into frame data
+  // Reads spectrometer temperature into frame data
+  void DataHandler::ReadSpectrometerTemperature() {
+    frame_data.spectrometer_temperature = DataHandler::spectrometer_.ReadSpectrometerTemperature();
+  }
+
+  // Reads RPi internal temperature sensor into frame data
+  void DataHandler::ReadRPiTemperature() {
+    frame_data.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
+
+  }
+  // Reads all internal temperature sensors into the float data
   void DataHandler::ReadInternalTemperature() {
     frame_data.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
     frame_data.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();

@@ -197,7 +197,7 @@ clean:
 .PHONY: test
 test:
 	@echo "Building tests"
-	$(CXX) $(CXXFLAGS) src/**.h test/** -lgtest
+	$(CXX) $(CXXFLAGS) src/**.h test/** -lgtest -I /usr/include/gmock/ -o radiance_test
 
 # Main rule, checks the executable and symlinks to the output
 all: $(BIN_PATH)/$(BIN_NAME)

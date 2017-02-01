@@ -10,6 +10,7 @@ namespace RADIANCE{
   Camera::Camera() {}
   Camera::~Camera() {}
 
+  // Initialize the camera object
   void Camera::Initialize() {
 
     // Initialize camera library
@@ -24,12 +25,9 @@ namespace RADIANCE{
     // Let the camera stabilize
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
-    image_size = raspicam_still_.getImageBufferSize();
-    std::cout << "Image size" << image_size << std::endl; // DEBUG
-    
   }
 
-  // image_size getter
+  // Getter for image_size
   int Camera::GetImageSize() {
     return image_size;
   }
@@ -41,8 +39,11 @@ namespace RADIANCE{
 
     // Retrieve the image in rgb format
     raspicam_still_.grab_retrieve(image_data,image_size);
+    for (int i=0; i < image_size; i++) {
+      image_data[i]=1;
+    }
 
     return image_data;
   }
-  
+
 }
