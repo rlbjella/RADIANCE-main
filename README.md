@@ -22,7 +22,7 @@ mv radiance /etc/init.d/radiance
 chmod 755 /etc/init.d/radiance
 update-rc.d radiance defaults
 ```
-- Add a Cron job to check every 5 minutes and run if not already running
+- Add a Cron job to check every 5 minutes and reboot if not running
 
 - Make sure the partition is formatted with a journaled partition like ext3. The journaling mode should be selected for maximum write safety.
 
