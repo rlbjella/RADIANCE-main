@@ -24,13 +24,8 @@ namespace RADIANCE {
     // science data struct.
     void ReadSensorData(const int frame_counter);
 
-    // Process the measured data and then write the heater output
-    void SetThermalControl();
-
     // Writes the science data struct to storage
     void WriteFrameToStorage(const int frame_counter);
-
-  private:
 
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
@@ -45,6 +40,11 @@ namespace RADIANCE {
       float attitude;
       unsigned char* image;
     };
+
+    // Gets the frame_data struct for other routines
+    frame_data_type GetFrameData();
+
+  private:
 
     // Holds the science data for each frame
     frame_data_type frame_data;

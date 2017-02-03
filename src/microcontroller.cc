@@ -1,8 +1,10 @@
-#include "microcontroller.h"
-#include "datahandler.h"
+#include <math.h>
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include "microcontroller.h"
+#include "datahandler.h"
+#include "controls/heatercontrol.h"
 
 namespace RADIANCE {
 
@@ -18,6 +20,27 @@ namespace RADIANCE {
       Microcontroller::frame_counter = 0;
     } else {
       Microcontroller::frame_counter++;
+    }
+
+  }
+
+  // Sets heater output based on the information in frame_data
+  void Microcontroller::SetThermalControl(DataHandler::frame_data_type frame_data) {
+
+    // Spectrometer heating
+    if (frame_data.spectrometer_temperature <= 1 && !spectrometer_heater.IsHeaterOn()){
+      spectrometer_heater.CommandHeaterOn();
+    } else if (frame_data.spectrometer_temperature >= 3 && spectrometer_heater.IsHeaterOn()) {
+      spectrometer_heater.CommandHeaterOff();
+    }
+
+    // Battery heating
+    // First average the two battery temperatures
+    float avg_battery_temperature = (frame_data.upper_battery_temperature + frame_data.lower_battery_temperature)/2;
+    if (avg_battery_temperature <= 1 && !battery_heater.IsHeaterOn()){
+      battery_heater.CommandHeaterOff();
+    } else if (avg_battery_temperature >= 3 && battery_heater.IsHeaterOn()) {
+      battery_heater.CommandHeaterOn();
     }
 
   }
@@ -38,7 +61,7 @@ namespace RADIANCE {
       data_handler_.ReadSensorData(Microcontroller::frame_counter);
 
       // Update the heater output
-      data_handler_.SetThermalControl();
+      Microcontroller::SetThermalControl(data_handler_.GetFrameData());
 
       // Write processed data to storage
       data_handler_.WriteFrameToStorage(Microcontroller::frame_counter);

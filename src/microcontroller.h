@@ -2,6 +2,7 @@
 #define RADIANCE_SRC_MICROCONTROLLER_H_
 
 #include "datahandler.h"
+#include "controls/heatercontrol.h"
 
 namespace RADIANCE {
     // The main commanding unit. Encapsulates the command
@@ -18,6 +19,8 @@ namespace RADIANCE {
     // Start the system (infinite) loop
     void StartLoop();
 
+    // Process the measured data and then write the heater output
+    void SetThermalControl(DataHandler::frame_data_type frame_data);
 
   private:
     // Keeps track of frame number.
@@ -26,6 +29,10 @@ namespace RADIANCE {
 
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
+
+    // Initialize the heater controls
+    HeaterControl battery_heater(1);
+    HeaterControl spectrometer_heater(1);
   };
   
 } // namespace RADIANCE

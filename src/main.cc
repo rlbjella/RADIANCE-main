@@ -5,6 +5,6 @@ int main() {
   RADIANCE::Microcontroller raspberry_pi;
   raspberry_pi.Initialize();
   raspberry_pi.StartLoop();
-    
+
 }
 

@@ -1,9 +1,10 @@
-#include "datahandler.h"
-#include "microcontroller.h"
-#include "../include/avaspec/avaspec.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <thread>
+#include "../include/avaspec/avaspec.h"
+#include "datahandler.h"
+#include "microcontroller.h"
+#include "controls/heatercontrol.h"
 
 namespace RADIANCE {
 
@@ -56,11 +57,6 @@ namespace RADIANCE {
     // }
   }
 
-  // Sets heater output based on the information in frame_data
-  void DataHandler::SetThermalControl() {
-
-  }
-
   // Writes the frame data to a csv file
   // Inputs: 
   // frame_counter: Used to determine a picture needs to be written
@@ -77,6 +73,9 @@ namespace RADIANCE {
     // WriteImagesToFile(&mlc2_image_file); // DEBUG
     // }
   }
+
+  // Gets the frame_data struct for other routines
+  DataHandler::frame_data_type DataHandler::GetFrameData() {return frame_data;}
 
   // Writes the frame data to the given file
   // Inputs:
