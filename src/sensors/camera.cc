@@ -1,16 +1,15 @@
-#include "camera.h"
 #include <chrono>
 #include <iostream>
 #include <thread>
 #include <fstream>
 #include <thread>
 #include <chrono>
+#include "camera.h"
 
 namespace RADIANCE{
-  Camera::Camera() {}
-  Camera::~Camera() {}
 
-  // Initialize the camera object
+  // Initialize the camera object by opening the raspicam object, configuring
+  // the image and then sleeping while the camera stabilizes
   void Camera::Initialize() {
 
     // Initialize camera library
@@ -24,7 +23,6 @@ namespace RADIANCE{
 
     // Let the camera stabilize
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-
   }
 
   // Getter for image_size
@@ -39,9 +37,6 @@ namespace RADIANCE{
 
     // Retrieve the image in rgb format
     raspicam_still_.grab_retrieve(image_data,image_size);
-    for (int i=0; i < image_size; i++) {
-      image_data[i]=1;
-    }
 
     return image_data;
   }

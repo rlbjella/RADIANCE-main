@@ -31,9 +31,9 @@ namespace RADIANCE {
     DataHandler data_handler_;
 
     // Initialize the heater controls
-    HeaterControl battery_heater(1);
-    HeaterControl spectrometer_heater(1);
+    HeaterControl battery_heater = HeaterControl(1);
+    HeaterControl spectrometer_heater = HeaterControl(1);
   };
-  
+
 } // namespace RADIANCE
 #endif //RADIANCE_SRC_MICROCONTROLLER_H_
