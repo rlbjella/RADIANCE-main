@@ -1,4 +1,5 @@
 #include "microcontroller.h"
+#include "framedata.h"
 
 int main() {
   // Create object and start the system loop

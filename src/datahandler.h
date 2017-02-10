@@ -1,6 +1,8 @@
 #ifndef RADIANCE_SRC_DATAHANDLER_H_
 #define RADIANCE_SRC_DATAHANDLER_H_
 
+#include <iostream>
+#include <fstream>
 #include "sensors/spectrometer.h"
 #include "sensors/rpitemperaturesensor.h"
 #include "sensors/internaltemperaturesensor.h"
@@ -8,8 +10,6 @@
 #include "sensors/humiditysensor.h"
 #include "sensors/attitudesensor.h"
 #include "sensors/camera.h"
-#include <iostream>
-#include <fstream>
 
 namespace RADIANCE {
   // DataHandler encapsulates the data transfer process

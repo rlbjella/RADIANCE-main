@@ -69,7 +69,7 @@ namespace RADIANCE {
 
     // Write an image to just the MLC drives every minute
     // if (frame_counter==59) {
-    WriteImagesToFile(mlc1_image_file);
+    // WriteImagesToFile(mlc1_image_file);
     // WriteImagesToFile(&mlc2_image_file); // DEBUG
     // }
   }
@@ -83,7 +83,7 @@ namespace RADIANCE {
   void DataHandler::WriteDataToFile(FILE* file) {
 
     // Write the engineering/housekeeping measurements to the given file
-    fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);
+    // fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);
     fwrite(reinterpret_cast<char*>(&frame_data.spectrometer_temperature), sizeof(float), 1, file);
     fwrite(reinterpret_cast<char*>(&frame_data.rpi_temperature), sizeof(float), 1, file);
     fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);

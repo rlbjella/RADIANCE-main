@@ -30,9 +30,9 @@ namespace RADIANCE {
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
 
-    // Initialize the heater controls
-    HeaterControl battery_heater = HeaterControl(1);
-    HeaterControl spectrometer_heater = HeaterControl(1);
+    // Initialize the heater controls. The argument is the PWM pin number
+    HeaterControl battery_heater_ = HeaterControl(1);
+    HeaterControl spectrometer_heater_ = HeaterControl(1);
   };
 
 } // namespace RADIANCE

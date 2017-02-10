@@ -122,7 +122,7 @@ namespace RADIANCE{
      // Need to convert the result to an actual measurement
      return Spectrometer::ConvertVoltageToTemperature(voltage);
   }
-  // Converts the voltage into a temperature using a polynomial
+  // Converts the voltage into a temperature using a predefined polynomial
   float Spectrometer::ConvertVoltageToTemperature(float voltage) {
     return 118.69 - 70.361*(voltage)+ 21.02*std::pow(voltage,2) - 3.6443*std::pow(voltage,3) + 0.1993*std::pow(voltage,4);
 
