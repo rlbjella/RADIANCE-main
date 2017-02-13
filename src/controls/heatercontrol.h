@@ -1,6 +1,7 @@
 #ifndef RADIANCE_SRC_HEATERCONTROL_H_
 #define RADIANCE_SRC_HEATERCONTROL_H_
 
+// Heater on and off values range between 1-1024
 #define PWM_HEATER_OFF 0
 #define PWM_HEATER_ON 1023
 namespace RADIANCE {

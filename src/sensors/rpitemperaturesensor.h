@@ -11,6 +11,9 @@ namespace RADIANCE {
   public:
     // Return a temperature measurement
     float ReadTemperature();
+  private:
+    // Location of temperature file
+    char* location_str = "/sys/class/thermal/thermal_zone0/temp";
   };
 
 }

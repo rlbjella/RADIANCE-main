@@ -11,7 +11,7 @@ namespace RADIANCE {
   void DataHandler::Initialize() {
 
     // Setup and configure each sensor
-    spectrometer_.Initialize();
+    // spectrometer_.Initialize();
     humidity_sensor_.Initialize();
     // rpi_temperature_sensor_.Initialize(); // RPi temperature sensor does no require initialization
     upper_battery_temperature_sensor_.Initialize();
@@ -41,19 +41,19 @@ namespace RADIANCE {
   void DataHandler::ReadSensorData(const int frame_counter) {
     
     // Spectrometer is the most important so measure first
-    DataHandler::ReadSpectrum();
+    // DataHandler::ReadSpectrum();//DEBUG
 
     // Read housekeeping(engineering) sensors
-    DataHandler::ReadSpectrometerTemperature();
+    // DataHandler::ReadSpectrometerTemperature(); //DEBUG
     DataHandler::ReadRPiTemperature();
-    DataHandler::ReadInternalTemperature();
-    DataHandler::ReadExternalTemperature();
-    DataHandler::ReadHumidity();
-    DataHandler::ReadAttitude();
+    // DataHandler::ReadInternalTemperature();
+    // DataHandler::ReadExternalTemperature();
+    // DataHandler::ReadHumidity();
+    // DataHandler::ReadAttitude();
 
     // Take a picture every 60 frames
     // if (frame_counter==59) { DEBUG
-    DataHandler::ReadCamera();
+    // DataHandler::ReadCamera();
     // }
   }
 
@@ -83,15 +83,15 @@ namespace RADIANCE {
   void DataHandler::WriteDataToFile(FILE* file) {
 
     // Write the engineering/housekeeping measurements to the given file
-    // fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);
-    fwrite(reinterpret_cast<char*>(&frame_data.spectrometer_temperature), sizeof(float), 1, file);
+    // fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);//DEBUG
+    // fwrite(reinterpret_cast<char*>(&frame_data.spectrometer_temperature), sizeof(float), 1, file);//DEBUG
     fwrite(reinterpret_cast<char*>(&frame_data.rpi_temperature), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.external_temperature), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.humidity), sizeof(float), 1, file);
-    fwrite(reinterpret_cast<char*>(&frame_data.attitude), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.external_temperature), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.humidity), sizeof(float), 1, file);
+    // fwrite(reinterpret_cast<char*>(&frame_data.attitude), sizeof(float), 1, file);
 
     // Flush the buffers after each write
     fflush(file);

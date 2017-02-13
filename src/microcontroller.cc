@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <stdexcept>
 #include "microcontroller.h"
 #include "datahandler.h"
 #include "controls/heatercontrol.h"
@@ -14,12 +15,16 @@ namespace RADIANCE {
   }
 
   // Steps one frame. Resets if frame counter is zero
+  // frame_counter should always be between 0 and 60
   void Microcontroller::UpdateFrameCounter() {
 
-    if (Microcontroller::frame_counter==59) {
+    if (Microcontroller::frame_counter<59) {
+      Microcontroller::frame_counter++;
+    } else if (Microcontroller::frame_counter==59) {
       Microcontroller::frame_counter = 0;
     } else {
-      Microcontroller::frame_counter++;
+      // This should never happen
+      throw std::out_of_range("frame_counter out of range");;
     }
 
   }
@@ -28,19 +33,19 @@ namespace RADIANCE {
   void Microcontroller::SetThermalControl(DataHandler::frame_data_type frame_data) {
 
     // Spectrometer heating
-    if (frame_data.spectrometer_temperature <= 1 && !spectrometer_heater.IsHeaterOn()){
-      spectrometer_heater.CommandHeaterOn();
-    } else if (frame_data.spectrometer_temperature >= 3 && spectrometer_heater.IsHeaterOn()) {
-      spectrometer_heater.CommandHeaterOff();
+    if (frame_data.spectrometer_temperature <= 1 && !spectrometer_heater_.IsHeaterOn()){
+      spectrometer_heater_.CommandHeaterOn();
+    } else if (frame_data.spectrometer_temperature >= 3 && spectrometer_heater_.IsHeaterOn()) {
+      spectrometer_heater_.CommandHeaterOff();
     }
 
     // Battery heating
     // First average the two battery temperatures
     float avg_battery_temperature = (frame_data.upper_battery_temperature + frame_data.lower_battery_temperature)/2;
-    if (avg_battery_temperature <= 1 && !battery_heater.IsHeaterOn()){
-      battery_heater.CommandHeaterOff();
-    } else if (avg_battery_temperature >= 3 && battery_heater.IsHeaterOn()) {
-      battery_heater.CommandHeaterOn();
+    if (avg_battery_temperature <= 1 && !battery_heater_.IsHeaterOn()){
+      battery_heater_.CommandHeaterOff();
+    } else if (avg_battery_temperature >= 3 && battery_heater_.IsHeaterOn()) {
+      battery_heater_.CommandHeaterOn();
     }
 
   }
