@@ -5,17 +5,23 @@
 #include <stdexcept>
 #include "microcontroller.h"
 #include "datahandler.h"
+#include "systemhaltexception.h"
 #include "controls/heatercontrol.h"
 
 namespace RADIANCE {
 
   // Setup and configure sensors by calling Data Handler instance
   void Microcontroller::Initialize() {
+    // Set terminate handler to custom restart function
+    // This will restart the pi if an unknown exception occurs
+    std::set_terminate(SystemHaltException::RestartSystem);
+
+    // Initialize DataHandler(does the read/write process)
     data_handler_.Initialize();
   }
 
   // Steps one frame. Resets if frame counter is zero
-  // frame_counter should always be between 0 and 60
+  // frame_counter should always be between 0 and 59
   void Microcontroller::UpdateFrameCounter() {
 
     if (Microcontroller::frame_counter<59) {
@@ -24,27 +30,28 @@ namespace RADIANCE {
       Microcontroller::frame_counter = 0;
     } else {
       // This should never happen
-      throw std::out_of_range("frame_counter out of range");;
+      throw SystemHaltException();
     }
 
   }
 
   // Sets heater output based on the information in frame_data
+  // The thermal algorithm is a dead zone between the minimum and maximum heater temperature(kMinHeaterTemp and kMaxHeaterTemp)
   void Microcontroller::SetThermalControl(DataHandler::frame_data_type frame_data) {
 
     // Spectrometer heating
-    if (frame_data.spectrometer_temperature <= 1 && !spectrometer_heater_.IsHeaterOn()){
+    if (frame_data.spectrometer_temperature <= kMinHeaterTemp && !spectrometer_heater_.IsHeaterOn()){
       spectrometer_heater_.CommandHeaterOn();
-    } else if (frame_data.spectrometer_temperature >= 3 && spectrometer_heater_.IsHeaterOn()) {
+    } else if (frame_data.spectrometer_temperature >= kMaxHeaterTemp && spectrometer_heater_.IsHeaterOn()) {
       spectrometer_heater_.CommandHeaterOff();
     }
 
     // Battery heating
     // First average the two battery temperatures
     float avg_battery_temperature = (frame_data.upper_battery_temperature + frame_data.lower_battery_temperature)/2;
-    if (avg_battery_temperature <= 1 && !battery_heater_.IsHeaterOn()){
+    if (avg_battery_temperature <= kMinHeaterTemp && !battery_heater_.IsHeaterOn()){
       battery_heater_.CommandHeaterOff();
-    } else if (avg_battery_temperature >= 3 && battery_heater_.IsHeaterOn()) {
+    } else if (avg_battery_temperature >= kMaxHeaterTemp && battery_heater_.IsHeaterOn()) {
       battery_heater_.CommandHeaterOn();
     }
 
@@ -55,14 +62,15 @@ namespace RADIANCE {
   // taken is also calculated
   void Microcontroller::StartLoop() {
 
+    std::chrono::high_resolution_clock::time_point begin,end;
+
     // System loop
     while (true) {
 
-      //DEBUG 
-      std::chrono::high_resolution_clock::time_point begin,end;
+      // Start the clock
       begin = std::chrono::high_resolution_clock::now();
 
-      // Main system loop
+      // Read all sensors
       data_handler_.ReadSensorData(Microcontroller::frame_counter);
 
       // Update the heater output
@@ -76,10 +84,9 @@ namespace RADIANCE {
 
       // Calculate time taken
       end = std::chrono::high_resolution_clock::now();
-
       std::chrono::duration<float> fs = end - begin;
       std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(fs);
-      std::cout << "Milliseconds taken: " << ms.count() << std::endl;
+      std::cout << "Milliseconds taken: " << ms.count() << std::endl; // DEBUG
 
       // Sleep, if necessary
       if (ms < std::chrono::milliseconds(1000)) {

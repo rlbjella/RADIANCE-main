@@ -5,8 +5,8 @@
 #include "controls/heatercontrol.h"
 
 namespace RADIANCE {
-    // The main commanding unit. Encapsulates the command
-    // functions of the Rasperry Pi 3. 
+  // Controls the RADIANCE software. Encapsulates the command
+  // functions of the Rasperry Pi 3.
   class Microcontroller {
   public:
 
@@ -24,8 +24,13 @@ namespace RADIANCE {
 
   private:
     // Keeps track of frame number.
+    // Used for determining if a picture needs to be taken
     // Resets every 60th frame
     int frame_counter = 0;
+
+    // Minimum and maximum heater temperatures
+    const float kMinHeaterTemp{1};
+    const float kMaxHeaterTemp = 3;
 
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
