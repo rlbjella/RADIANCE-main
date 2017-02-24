@@ -6,7 +6,7 @@ namespace RADIANCE{
   // Opens the file, reads the temperature in as ASCII, then closes the file
   float RPiTemperatureSensor::ReadTemperature() {
     // Open the temperature file: temperature_file format is degrees Celcius in ASCII
-    FILE* temperature_file = fopen(location_str,"r");
+    FILE* temperature_file = fopen(kLocationStr,"r");
 
     // Read the temperature, close the file and return
     float temp;

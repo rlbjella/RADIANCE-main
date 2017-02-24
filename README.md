@@ -2,7 +2,7 @@
 Software repository for the RADIANCE senior project.
 
 # Requirements
-Requires the avaspec, raspicam, and wiringPi packages.
+Requires the avaspec, raspicam, and pigpio packages.
 # Downloading/Compilation
 To install run git clone on the repository:
 ```

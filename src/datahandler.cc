@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <thread>
 #include "../include/avaspec/avaspec.h"
+#include "systemhaltexception.h"
 #include "datahandler.h"
 #include "microcontroller.h"
 #include "controls/heatercontrol.h"
@@ -14,8 +15,6 @@ namespace RADIANCE {
     // spectrometer_.Initialize();
     humidity_sensor_.Initialize();
     // rpi_temperature_sensor_.Initialize(); // RPi temperature sensor does no require initialization
-    upper_battery_temperature_sensor_.Initialize();
-    lower_battery_temperature_sensor_.Initialize();
     external_temperature_sensor_.Initialize();
     attitude_sensor_.Initialize();
     camera_.Initialize();
@@ -81,6 +80,10 @@ namespace RADIANCE {
   // Inputs:
   // file: The C file object to write to
   void DataHandler::WriteDataToFile(FILE* file) {
+    // Null pointer check
+    if (!file) {
+      throw SystemHaltException();
+    }
 
     // Write the engineering/housekeeping measurements to the given file
     // fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);//DEBUG
@@ -102,6 +105,10 @@ namespace RADIANCE {
   // Inputs: 
   // file: The C file object to write to
   void DataHandler::WriteImagesToFile(FILE* file) {
+    // Null pointer check
+    if (!file) {
+      throw SystemHaltException();
+    }
 
     // Write image to the given file
     fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), file);

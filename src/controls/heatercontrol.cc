@@ -1,26 +1,25 @@
-#include <wiringPi.h>
+#include <pigpio.h>
 #include "heatercontrol.h"
 
 namespace RADIANCE{
-  // TODO(James)
   // Initialize the the internal heaters
   void HeaterControl::Initialize() {
-    wiringPiSetup();
-    pinMode(gpio_pin,PWM_OUTPUT);
+    gpioSetMode(gpio_pin,PI_OUTPUT);
     is_heater_on = false;
   }
 
   // Turn the heater on or off
   void HeaterControl::CommandHeaterOn() {
-    pwmWrite(gpio_pin,PWM_HEATER_ON);
+    gpioPWM(gpio_pin,kPwmHeaterOn);
     is_heater_on = true;
   }
 
   // Turn the heater off
   void HeaterControl::CommandHeaterOff() {
-    pwmWrite(gpio_pin,PWM_HEATER_OFF);
+    gpioPWM(gpio_pin,kPwmHeaterOff);
     is_heater_on = false;
   }
 
+  // Return heater status
   bool HeaterControl::IsHeaterOn() {return is_heater_on;}
 }

@@ -1,17 +1,24 @@
-#include <wiringPiI2C.h>
-#include "externaltemperaturesensor.h"
+#include <pigpio.h>
 #include <iostream>
+#include "externaltemperaturesensor.h"
 
 namespace RADIANCE{
+  // Initializes the temperature sensor by setting the file handle to the I2C address
   void ExternalTemperatureSensor::Initialize() {
-    int file_handle = wiringPiI2CSetup(kI2cAddress);
+    file_handle = i2cOpen(1,kI2cAddress,0);
   }
-  float ExternalTemperatureSensor::ReadTemperature() {
-    int lsb = wiringPiI2CReadReg8(file_handle,0);
-    int msb = wiringPiI2CReadReg8(file_handle,1);
 
-    float calib = (((msb << 8) | lsb) >> 4) * kCountsToCelsius;
-    std::cout << calib << std::endl;
-    return calib;
+  // Read temperature from sensor
+  float ExternalTemperatureSensor::ReadTemperature() {
+    // Create buffer and read two bytes from register
+    char buf[2];
+    i2cReadI2CBlockData(file_handle,kTempRegister,buf,2);
+    return ConvertBlockDataToTemperature(buf);
+  }
+
+  // Converts two's complement block data to temperature measurement
+  float ExternalTemperatureSensor::ConvertBlockDataToTemperature(char* buf) {
+    int meas = buf[0] << 4 | buf[1] >> 4;
+    return meas*kCountsToCelsius;
   }
 }

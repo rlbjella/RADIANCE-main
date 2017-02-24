@@ -12,11 +12,18 @@ public:
     // Return a temperature measurement
     float ReadTemperature();
 private:
+
+    // Convert i2c data to temperature
+    float ConvertBlockDataToTemperature(char* buf);
+
     // Linux file handler
     int file_handle;
 
     // I2C software address
     const int kI2cAddress = 0x48;
+
+    // Temperature register number
+    const int kTempRegister = 0;
 
     // Number of LSBs per Celsius
     const float kCountsToCelsius = 0.0625;

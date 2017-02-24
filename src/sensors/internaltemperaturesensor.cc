@@ -1,14 +1,18 @@
+#include <iostream>
+#include <string.h>
+#include <unistd.h>
 #include "internaltemperaturesensor.h"
 
 namespace RADIANCE{
-  void InternalTemperatureSensor::Initialize() {
-  }
+
+  // Set sensor location based on serial number
+  InternalTemperatureSensor::InternalTemperatureSensor(char* aserial_str):kLocationStr(aserial_str) {}
 
   // Reads temperature from temperature file
   // Opens the sensor file, filter to the temperature and covert to celcius
   float InternalTemperatureSensor::ReadTemperature() {
     // Open the file and save the file handle
-    int fd = open(location_str, O_RDONLY);
+    int fd = open(kLocationStr, O_RDONLY);
 
     // Initialize the buffer and read 256 bytes
     char buf[256];

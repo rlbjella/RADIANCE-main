@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <stdexcept>
+#include <pigpio.h>
 #include "microcontroller.h"
 #include "datahandler.h"
 #include "systemhaltexception.h"
@@ -15,6 +16,9 @@ namespace RADIANCE {
     // Set terminate handler to custom restart function
     // This will restart the pi if an unknown exception occurs
     std::set_terminate(SystemHaltException::RestartSystem);
+
+    // Start the GPIO library
+    gpioInitialise();
 
     // Initialize DataHandler(does the read/write process)
     data_handler_.Initialize();

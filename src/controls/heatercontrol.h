@@ -1,9 +1,6 @@
-#ifndef RADIANCE_SRC_HEATERCONTROL_H_
-#define RADIANCE_SRC_HEATERCONTROL_H_
+#ifndef RADIANCE_SRC_CONTROLS_HEATERCONTROL_H_
+#define RADIANCE_SRC_CONTROLS_HEATERCONTROL_H_
 
-// Heater on and off values range between 1-1024
-#define PWM_HEATER_OFF 0
-#define PWM_HEATER_ON 1023
 namespace RADIANCE {
 
   // Class for initializing and commanding the internal heaters
@@ -11,7 +8,7 @@ namespace RADIANCE {
 
   public:
 
-    // New
+    // Initialize the heater with the gpio pin as argument
     HeaterControl(int agpio_pin):gpio_pin(agpio_pin){}
 
     // Initialize the the internal heaters
@@ -23,12 +20,20 @@ namespace RADIANCE {
     // Turn the heater off
     void CommandHeaterOff();
 
+    // Return heater status
     bool IsHeaterOn();
   private:
-    int gpio_pin;
+    // The heater GPIO pin number, passed into the constructor
+    const int gpio_pin;
+
+    // Current heater status
     bool is_heater_on;
+
+    // The heater on and off values range between 0 and 255
+    const int kPwmHeaterOff{0};
+    const int kPwmHeaterOn{255};
 
   };
 
 }
-#endif // RADIANCE_SRC_HEATERCONTROL_H_
+#endif // RADIANCE_SRC_CONTROLS_HEATERCONTROL_H_
