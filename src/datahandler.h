@@ -29,6 +29,7 @@ namespace RADIANCE {
 
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
+      unsigned int time_stamp;
       float* spectrum;
       float spectrometer_temperature;
       float rpi_temperature;
@@ -76,16 +77,6 @@ namespace RADIANCE {
 
     // Writes the images to the given file
     void WriteImagesToFile(FILE* file);
-
-    // These functions read the measurements into the frame data struct
-    void ReadSpectrum();
-    void ReadSpectrometerTemperature();
-    void ReadRPiTemperature();
-    void ReadInternalTemperature();
-    void ReadExternalTemperature();
-    void ReadHumidity();
-    void ReadAttitude();
-    void ReadCamera();
   };
 
 } // namespace RADIANCE

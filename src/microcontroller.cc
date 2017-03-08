@@ -17,8 +17,8 @@ namespace RADIANCE {
     // This will restart the pi if an unknown exception occurs
     std::set_terminate(SystemHaltException::RestartSystem);
 
-    // Start the GPIO library
-    gpioInitialise();
+    // Initialize GPIO library
+    gpioInitialize();
 
     // Initialize DataHandler(does the read/write process)
     data_handler_.Initialize();

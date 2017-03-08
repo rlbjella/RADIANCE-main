@@ -197,7 +197,7 @@ clean:
 .PHONY: test
 test:
 	@echo "Building tests"
-	$(CXX) $(CXXFLAGS) src/**.h test/** -lgtest -I /usr/include/gmock/ -o radiance_test
+	$(CXX) $(CXXFLAGS) src/**.h test/** $(LINK_FLAGS) -I /usr/include/gmock/ -o radiance_test
 
 # Main rule, checks the executable and symlinks to the output
 all: $(BIN_PATH)/$(BIN_NAME)
@@ -222,6 +222,6 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@echo "Compiling: $< -> $@"
 	@$(START_TIME)
-	$(CMD_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+	$(CMD_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@ -O3
 	@echo -en "\t Compile time: "
 	@$(END_TIME)

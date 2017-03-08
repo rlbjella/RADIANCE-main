@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <sys/types.h>
+#include <chrono>
+#include <typeinfo>
+#include <iostream>
 #include <thread>
 #include "../include/avaspec/avaspec.h"
 #include "systemhaltexception.h"
@@ -12,12 +15,11 @@ namespace RADIANCE {
   void DataHandler::Initialize() {
 
     // Setup and configure each sensor
-    // spectrometer_.Initialize();
-    humidity_sensor_.Initialize();
-    // rpi_temperature_sensor_.Initialize(); // RPi temperature sensor does no require initialization
-    external_temperature_sensor_.Initialize();
-    attitude_sensor_.Initialize();
-    camera_.Initialize();
+    // spectrometer_.Initialize(); DEBUG
+    // humidity_sensor_.Initialize();
+    // external_temperature_sensor_.Initialize();
+    // attitude_sensor_.Initialize();
+    // camera_.Initialize();
 
     // Setup and configure measurement storage
     // Open file objects in binary append mode
@@ -38,21 +40,28 @@ namespace RADIANCE {
   // Inputs: 
   // frame_counter: Used to determine whether a picture is needed
   void DataHandler::ReadSensorData(const int frame_counter) {
-    
-    // Spectrometer is the most important so measure first
-    // DataHandler::ReadSpectrum();//DEBUG
+
+    // Read timestamp measurement
+    // This timestamp represents seconds since Unix epoch
+    std::chrono::seconds ms = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
+    frame_data.time_stamp = ms.count();
+
+    // Read main instrument(spectrometer)
+    // frame_data.spectrum = spectrometer_.ReadSpectrum();
 
     // Read housekeeping(engineering) sensors
-    // DataHandler::ReadSpectrometerTemperature(); //DEBUG
-    DataHandler::ReadRPiTemperature();
-    // DataHandler::ReadInternalTemperature();
-    // DataHandler::ReadExternalTemperature();
-    // DataHandler::ReadHumidity();
-    // DataHandler::ReadAttitude();
+    // frame_data.spectrometer_temperature = spectrometer_.ReadSpectrometerTemperature(); DEBUG
+    frame_data.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
+    // frame_data.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
+    // frame_data.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
+    // frame_data.storage_temperature = storage_temperature_sensor_.ReadTemperature();
+    // frame_data.external_temperature = external_temperature_sensor_.ReadTemperature();
+    // frame_data.humidity = humidity_sensor_.ReadHumidity();
+    // frame_data.attitude = attitude_sensor_.ReadAttitude();
 
     // Take a picture every 60 frames
     // if (frame_counter==59) { DEBUG
-    // DataHandler::ReadCamera();
+    // frame_data.image = camera_.ReadImage();
     // }
   }
 
@@ -85,16 +94,19 @@ namespace RADIANCE {
       throw SystemHaltException();
     }
 
+    // Write timestamp of measurement
+    fwrite(&frame_data.time_stamp, sizeof(unsigned int), 1, file);
+
     // Write the engineering/housekeeping measurements to the given file
     // fwrite(frame_data.spectrum, sizeof(float), spectrometer_.GetNumPixels(), file);//DEBUG
-    // fwrite(reinterpret_cast<char*>(&frame_data.spectrometer_temperature), sizeof(float), 1, file);//DEBUG
-    fwrite(reinterpret_cast<char*>(&frame_data.rpi_temperature), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.upper_battery_temperature), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.lower_battery_temperature), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.storage_temperature), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.external_temperature), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.humidity), sizeof(float), 1, file);
-    // fwrite(reinterpret_cast<char*>(&frame_data.attitude), sizeof(float), 1, file);
+    // fwrite(&frame_data.spectrometer_temperature, sizeof(float), 1, file);//DEBUG
+    fwrite(&frame_data.rpi_temperature, sizeof(float), 1, file);
+    // fwrite(&frame_data.upper_battery_temperature, sizeof(float), 1, file);
+    // fwrite(&frame_data.lower_battery_temperature, sizeof(float), 1, file);
+    // fwrite(&frame_data.storage_temperature, sizeof(float), 1, file);
+    // fwrite(&frame_data.external_temperature, sizeof(float), 1, file);
+    // fwrite(&frame_data.humidity, sizeof(float), 1, file);
+    // fwrite(&frame_data.attitude, sizeof(float), 1, file);
 
     // Flush the buffers after each write
     fflush(file);
@@ -110,6 +122,9 @@ namespace RADIANCE {
       throw SystemHaltException();
     }
 
+    // Write timestamp of image
+    fwrite(&frame_data.time_stamp, sizeof(float), 1, file);
+
     // Write image to the given file
     fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), file);
 
@@ -117,45 +132,4 @@ namespace RADIANCE {
     fflush(file);
   }
 
-  // Reads spectrometer data into frame data
-  void DataHandler::ReadSpectrum() {
-    frame_data.spectrum = DataHandler::spectrometer_.ReadSpectrum();
-  }
-
-  // Reads spectrometer temperature into frame data
-  void DataHandler::ReadSpectrometerTemperature() {
-    frame_data.spectrometer_temperature = DataHandler::spectrometer_.ReadSpectrometerTemperature();
-  }
-
-  // Reads RPi internal temperature sensor into frame data
-  void DataHandler::ReadRPiTemperature() {
-    frame_data.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
-
-  }
-  // Reads all internal temperature sensors into the float data
-  void DataHandler::ReadInternalTemperature() {
-    frame_data.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
-    frame_data.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
-    frame_data.storage_temperature = storage_temperature_sensor_.ReadTemperature();
-  }
-
-  // Reads a measurement from the external temperature sensor
-  void DataHandler::ReadExternalTemperature() {
-    frame_data.external_temperature = external_temperature_sensor_.ReadTemperature();
-  }
-  // Reads a measurement from the humidity sensor
-  void DataHandler::ReadHumidity() {
-    frame_data.humidity = humidity_sensor_.ReadHumidity();
-  }
-
-  // Takes a measurement from the attitude determination photodiodes
-  void DataHandler::ReadAttitude() {
-    frame_data.attitude = attitude_sensor_.ReadAttitude();
-  }
-
-  // Reads camera data into frame data
-  void DataHandler::ReadCamera() {
-    frame_data.image = camera_.ReadImage();
-  }
- 
 }
