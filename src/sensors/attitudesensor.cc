@@ -1,11 +1,9 @@
 #include "attitudesensor.h"
 
 namespace RADIANCE{
-  void AttitudeSensor::Initialize() {
+  //TODO(James)
+  AttitudeSensor::AttitudeSensor() {}
 
-  }
-
-  float AttitudeSensor::ReadAttitude() {
-    return 0.1f;
-  }
+  //TODO(James)
+  float AttitudeSensor::ReadAttitude() {}
 }

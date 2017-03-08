@@ -2,8 +2,8 @@
 #include "heatercontrol.h"
 
 namespace RADIANCE{
-  // Initialize the the internal heaters
-  void HeaterControl::Initialize() {
+
+  HeaterControl::HeaterControl(int agpio_pin):gpio_pin(agpio_pin) {
     gpioSetMode(gpio_pin,PI_OUTPUT);
     is_heater_on = false;
   }

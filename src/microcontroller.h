@@ -11,7 +11,7 @@ namespace RADIANCE {
   public:
 
     // Setup and configure sensors
-    void Initialize();
+    Microcontroller();
 
     // Step one frame
     void UpdateFrameCounter();
@@ -29,7 +29,7 @@ namespace RADIANCE {
     int frame_counter = 0;
 
     // Minimum and maximum heater temperatures
-    const float kMinHeaterTemp{1};
+    const float kMinHeaterTemp = 1;
     const float kMaxHeaterTemp = 3;
 
     // Used to handle input/output of data from reading the sensors to storage

@@ -9,10 +9,7 @@ namespace RADIANCE {
   public:
 
     // Initialize the heater with the gpio pin as argument
-    HeaterControl(int agpio_pin):gpio_pin(agpio_pin){}
-
-    // Initialize the the internal heaters
-    void Initialize();
+    HeaterControl(int agpio_pin);
 
     // Turn the heater on or off
     void CommandHeaterOn();

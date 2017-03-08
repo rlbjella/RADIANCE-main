@@ -3,8 +3,7 @@
 
 namespace RADIANCE{
   // TODO(James)
-  void HumiditySensor::Initialize() {
-  }
+  HumiditySensor::HumiditySensor() {}
 
   // TODO(James)
   float HumiditySensor::ReadHumidity(){

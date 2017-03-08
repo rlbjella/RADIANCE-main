@@ -7,7 +7,7 @@ namespace RADIANCE {
 
   public:
     // Initialize the sensor and start the ability to read
-    void Initialize();
+    HumiditySensor();
 
     // Return a humidity measurement
     float ReadHumidity();

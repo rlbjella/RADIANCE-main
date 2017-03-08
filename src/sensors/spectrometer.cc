@@ -8,7 +8,7 @@ namespace RADIANCE{
 
   // Setup and configure the spectrometer
   // Start by finding and retrieving the spectrometer handle, then configuring the measurements
-  void Spectrometer::Initialize() {
+  Spectrometer::Spectrometer() {
 
     // Init the library, the parameter is type of interface.
     // 0 for USB

@@ -12,14 +12,7 @@
 
 namespace RADIANCE {
 
-  void DataHandler::Initialize() {
-
-    // Setup and configure each sensor
-    // spectrometer_.Initialize(); DEBUG
-    // humidity_sensor_.Initialize();
-    // external_temperature_sensor_.Initialize();
-    // attitude_sensor_.Initialize();
-    // camera_.Initialize();
+  DataHandler::DataHandler() {
 
     // Setup and configure measurement storage
     // Open file objects in binary append mode

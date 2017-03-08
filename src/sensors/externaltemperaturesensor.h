@@ -7,7 +7,7 @@ namespace RADIANCE {
   class ExternalTemperatureSensor {
 public:
     // Initialize the temperature sensor and get it ready to read temperature
-    void Initialize();
+    ExternalTemperatureSensor();
 
     // Return a temperature measurement
     float ReadTemperature();

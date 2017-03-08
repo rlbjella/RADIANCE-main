@@ -12,16 +12,10 @@
 namespace RADIANCE {
 
   // Setup and configure sensors by calling Data Handler instance
-  void Microcontroller::Initialize() {
+  Microcontroller::Microcontroller() {
     // Set terminate handler to custom restart function
     // This will restart the pi if an unknown exception occurs
     std::set_terminate(SystemHaltException::RestartSystem);
-
-    // Initialize GPIO library
-    gpioInitialize();
-
-    // Initialize DataHandler(does the read/write process)
-    data_handler_.Initialize();
   }
 
   // Steps one frame. Resets if frame counter is zero

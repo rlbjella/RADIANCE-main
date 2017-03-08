@@ -8,7 +8,7 @@ namespace RADIANCE{
 
   // Initialize the camera object by opening the raspicam object, configuring
   // the image and then sleeping while the camera stabilizes
-  void Camera::Initialize() {
+  Camera::Camera() {
 
     // Initialize camera library
     if (!raspicam_still_.open()) {

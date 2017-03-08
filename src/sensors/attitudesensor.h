@@ -7,8 +7,8 @@ namespace RADIANCE {
   class AttitudeSensor {
 
   public:
-    // Initialize the photodiodes and get them ready to take measurements
-    void Initialize();
+    // Initialize attitude sensor
+    AttitudeSensor();
 
     // Return an attitude measurement
     float ReadAttitude();

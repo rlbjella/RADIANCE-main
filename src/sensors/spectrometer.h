@@ -8,7 +8,7 @@ namespace RADIANCE {
 
   public:
     // Setup and configure the spectrometer
-    void Initialize();
+    Spectrometer();
 
     // Return a spectrum measurement
     float* ReadSpectrum();

@@ -8,7 +8,7 @@ namespace RADIANCE {
   public:
 
     // Setup and configure the camera
-    void Initialize();
+    Camera();
 
     // Read a spectrom
     unsigned char* ReadImage();

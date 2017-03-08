@@ -4,7 +4,7 @@
 
 namespace RADIANCE{
   // Initializes the temperature sensor by setting the file handle to the I2C address
-  void ExternalTemperatureSensor::Initialize() {
+  ExternalTemperatureSensor::ExternalTemperatureSensor() {
     file_handle = i2cOpen(1,kI2cAddress,0);
   }
 
