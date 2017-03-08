@@ -119,7 +119,7 @@ namespace RADIANCE {
     fwrite(&frame_data.time_stamp, sizeof(float), 1, file);
 
     // Write image to the given file
-    fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), file);
+    // fwrite(frame_data.image, sizeof(float), camera_.GetImageSize(), file);
 
     // Flush the buffers after each write
     fflush(file);

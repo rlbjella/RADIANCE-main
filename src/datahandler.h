@@ -51,15 +51,15 @@ namespace RADIANCE {
     frame_data_type frame_data;
 
     // Sensor data members
-    Spectrometer spectrometer_;
-    HumiditySensor humidity_sensor_;
+    /* Spectrometer spectrometer_; */
+    /* HumiditySensor humidity_sensor_; */
     RPiTemperatureSensor rpi_temperature_sensor_;
-    InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
-    InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
-    InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
-    ExternalTemperatureSensor external_temperature_sensor_;
-    AttitudeSensor attitude_sensor_;
-    Camera camera_;
+    /* InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
+    /* InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
+    /* InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
+    /* ExternalTemperatureSensor external_temperature_sensor_; */
+    /* AttitudeSensor attitude_sensor_; */
+    /* Camera camera_; */
 
     // Storage data objects for regular data
     // These are kept open for performance
