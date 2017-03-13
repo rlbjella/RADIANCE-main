@@ -55,6 +55,7 @@ namespace RADIANCE {
     // Take a picture every 60 frames
     // if (frame_counter==59) { DEBUG
     // frame_data.image = camera_.ReadImage();
+    std::cout << "Timestamp: " << frame_data.time_stamp << "; ";
     // }
   }
 
