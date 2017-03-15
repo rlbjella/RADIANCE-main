@@ -20,15 +20,11 @@ elif sys.argv[1] == 'mlc2':
 # Offset from end of file, this is the total number of bytes of each measurement
 offset = 8240
 
-# Spectrometer tuple
-spectrum = []
-
 # Reads in datafile and unpacks data from binary format
 with open(drive + 'datafile','rb') as f:
     f.seek(-offset,os.SEEK_END)
     timestamp = struct.unpack('I',f.read(4))
-    for i in range(0,2048):
-        spectrum.append(struct.unpack('f',f.read(4)))
+    spectrum = struct.unpack('2048f',f.read(2048*4))
     spec_temp = struct.unpack('f',f.read(4))
     rpi_temp = struct.unpack('f',f.read(4))
     hk_temp_bat1 = struct.unpack('f',f.read(4))
@@ -64,5 +60,7 @@ print(data_format.format(drive,
                          ads3,
                          ads4))
                     
+
 # Print image file size if necessary
-print('Image file size: {size}'.format(size=os.path.getsize(drive+'imagefile')))
+if type=='mlc':
+    print('Image file size: {size}'.format(size=os.path.getsize(drive+'imagefile')))
