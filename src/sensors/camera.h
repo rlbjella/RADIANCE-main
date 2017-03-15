@@ -12,7 +12,7 @@ namespace RADIANCE {
     Camera();
 
     // Camera image size
-    const static size_t kImageSize = 97858;
+    const static size_t kImageSize = 921654;
 
     // Read a spectrom
     void ReadImage(std::array<unsigned char,kImageSize>& image_data);

@@ -55,9 +55,9 @@ namespace RADIANCE {
     Spectrometer spectrometer_;
     HumiditySensor humidity_sensor_;
     RPiTemperatureSensor rpi_temperature_sensor_;
-    InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
+    InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/10-000803362138/w1_slave"}; // File location
     InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
-    InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
+    InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-0000075f85ba/w1_slave"}; // File location
     ExternalTemperatureSensor external_temperature_sensor_;
     AttitudeSensor attitude_sensor_;
     Camera camera_;

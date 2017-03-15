@@ -6,15 +6,17 @@ import os
 import sys
 import struct
 
+drive = ''
+type = ''
 # Argument must be the drive number
 if sys.argv[1] == 'slc':
-    drive = '/mnt/slc_drive/'
+    drive = '/mnt/slcdrive/'
     type = 'slc'
 elif sys.argv[1] == 'mlc1':
-    drive = '/mnt/mlc1_drive/'
+    drive = '/mnt/mlcdrive1/'
     type = 'mlc'
 elif sys.argv[1] == 'mlc2':
-    drive = '/mnt/mlc2_drive/'
+    drive = '/mnt/mlcdrive2/'
     type = 'mlc'
 
 # Offset from end of file, this is the total number of bytes of each measurement
@@ -42,7 +44,8 @@ data_format = """Drive: {0}
 Timestamp: {1}
 ENV Hum: {2} %; ENV Temp: {3} C;
 HK Temp SLC: {4} C;  HK Temp Bat1: {5} C;  HK Temp Bat2:{6} C
-Spec Temp: {7} C; RPi Temp: {8} C; Spec: {9}
+Spec Temp: {7} C; RPi Temp: {8} C;
+Spec(First pixel): {9}
 ADS1: {10} A; ADS2: {11} A; ADS3: {12} A; ADS4: {13} A; """
 
 print(data_format.format(drive,

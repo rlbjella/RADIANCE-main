@@ -49,7 +49,7 @@ namespace RADIANCE {
     frame_data.storage_temperature = storage_temperature_sensor_.ReadTemperature();
     frame_data.external_temperature = external_temperature_sensor_.ReadTemperature();
     frame_data.humidity = humidity_sensor_.ReadHumidity();
-    attitude_sensor_.ReadAttitude(frame_data.attitude_values);
+    attitude_sensor_.ReadAttitude(frame_data.attitude_values); //DEBUG
 
     // Take a picture every 60 frames
     if (frame_counter==59) {

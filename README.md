@@ -15,7 +15,7 @@ cd RADIANCE-main
 make
 ```
 # Installation
-- Add the executable to be started on boot:
+- Add the startup script to startup on boot:
 
 ```
 mv radiance /etc/init.d/radiance
