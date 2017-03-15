@@ -1,6 +1,7 @@
 #ifndef RADIANCE_SRC_SENSORS_CAMERA_H_
 #define RADIANCE_SRC_SENSORS_CAMERA_H_
 
+#include <array>
 #include "../../include/raspicam/raspicam_still.h"
 namespace RADIANCE {
   // Encapsulates the camera configuration and reading
@@ -10,21 +11,15 @@ namespace RADIANCE {
     // Setup and configure the camera
     Camera();
 
-    // Read a spectrom
-    unsigned char* ReadImage();
+    // Camera image size
+    const static size_t kImageSize = 97858;
 
-    // Getter for image_size
-    int GetImageSize();
+    // Read a spectrom
+    void ReadImage(std::array<unsigned char,kImageSize>& image_data);
 
   private:
     // Raspberry Pi Camera library for grabbing images
     raspicam::RaspiCam_Still raspicam_still_;
-
-    // Camera sensor data
-    unsigned char* image_data;
-
-    // Camera image size, set in call to Initialize
-    int image_size;
 
   };
   

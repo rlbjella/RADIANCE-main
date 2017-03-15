@@ -10,27 +10,18 @@ namespace RADIANCE {
     // Setup and configure the spectrometer
     Spectrometer();
 
-    // Return a spectrum measurement
-    float* ReadSpectrum();
+    // Number of spectrometer elements
+    static const int kNumPixels = 2048;
 
-    // Getter for num_pixels
-    int GetNumPixels();
+    // Return a spectrum measurement into the given array
+    void ReadSpectrum(std::array<float,kNumPixels>& spectrum);
 
     // Return spectrometer temperature
     float ReadSpectrometerTemperature();
-
   private:
-    // Number of spectrometer elements
-    static const int num_pixels = 2048;
 
     // Spectrometer reference handle
     AvsHandle handle_;
-
-    // Avantes library requires double array so use for measuring
-    double d_spectrum[num_pixels];
-
-    // Convert double spectrum to float array to save data storage
-    float f_spectrum[num_pixels];
 
     // Converts the voltage into a temperature
     float ConvertVoltageToTemperature(float voltage);

@@ -30,26 +30,20 @@ namespace RADIANCE{
     // Set the ADC to high res mode
     AVS_UseHighResAdc(handle_,1);
 
-    // Retrieve number of pixels
-    unsigned short num_pixels;
-    if (AVS_GetNumPixels(handle_,&num_pixels)!=ERR_SUCCESS) {
-      std::cout << "Err in getting num_pixels" << std::endl; // DEBUG
-    }
-
   }
 
   // Reads the spectrum with the setup handle. First calls AVS_Measure
   // which starts the read and then waits until a spectrum is
   // ready. Then reads and converts to float array for storage
-  float* Spectrometer::ReadSpectrum() {
+  void Spectrometer::ReadSpectrum(std::array<float,kNumPixels>& f_spectrum) {
 
     // Configure the measurement
-    // TODO Make measurement config its own function
+    // TODO(James): Make measurement config its own function
     MeasConfigType meas_config;
 
     // General parameters
     meas_config.m_StartPixel      = 0;
-    meas_config.m_StopPixel       = (num_pixels - 1);
+    meas_config.m_StopPixel       = (kNumPixels - 1);
     meas_config.m_IntegrationTime   = 100;
     meas_config.m_IntegrationDelay    = 0;
     meas_config.m_NrAverages      = 1;
@@ -92,22 +86,18 @@ namespace RADIANCE{
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
+    // Avantes library requires double array so use for measuring
+    double d_spectrum[kNumPixels];
     // Get spectrum from device
     if (AVS_GetLambda(handle_,d_spectrum)!=ERR_SUCCESS) {
       std::cout << "Err in GetScopeData" << std::endl; //DEBUG
     }
 
     // Convert spectrum to floats for storage efficiency
-    for (int i=0; i < num_pixels; i++) {
+    for (int i=0; i < kNumPixels; i++) {
       f_spectrum[i] = (float) d_spectrum[i];
     }
-    return f_spectrum;
 
-  }
-
-  // Returns num_pixels
-  int Spectrometer::GetNumPixels() {
-    return num_pixels;
   }
 
   // Returns spectrometer internal temperature

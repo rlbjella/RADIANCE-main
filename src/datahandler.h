@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <array>
 #include "sensors/spectrometer.h"
 #include "sensors/rpitemperaturesensor.h"
 #include "sensors/internaltemperaturesensor.h"
@@ -30,7 +31,7 @@ namespace RADIANCE {
     // Structure type to hold all the sensor data for each frame
     struct frame_data_type {
       unsigned int time_stamp;
-      float* spectrum;
+      std::array<float,Spectrometer::kNumPixels> spectrum;
       float spectrometer_temperature;
       float rpi_temperature;
       float upper_battery_temperature;
@@ -38,8 +39,8 @@ namespace RADIANCE {
       float storage_temperature;
       float external_temperature;
       float humidity;
-      float attitude;
-      unsigned char* image;
+      std::array<float,AttitudeSensor::kNumPhotodiodes> attitude_values;
+      std::array<unsigned char,Camera::kImageSize> image;
     };
 
     // Gets the frame_data struct for other routines
@@ -51,15 +52,15 @@ namespace RADIANCE {
     frame_data_type frame_data;
 
     // Sensor data members
-    /* Spectrometer spectrometer_; */
-    /* HumiditySensor humidity_sensor_; */
+    Spectrometer spectrometer_;
+    HumiditySensor humidity_sensor_;
     RPiTemperatureSensor rpi_temperature_sensor_;
-    /* InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
-    /* InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
-    /* InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location */
-    /* ExternalTemperatureSensor external_temperature_sensor_; */
-    /* AttitudeSensor attitude_sensor_; */
-    /* Camera camera_; */
+    InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
+    InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
+    InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
+    ExternalTemperatureSensor external_temperature_sensor_;
+    AttitudeSensor attitude_sensor_;
+    Camera camera_;
 
     // Storage data objects for regular data
     // These are kept open for performance

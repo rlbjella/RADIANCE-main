@@ -1,26 +1,29 @@
-# Author: Ned Flanders
+# Author: James Pavek
+# Reads last measurements from data files and prints to screen
 # Arguments-drive_name: Flash drive name to print information from
 
 import os
 import sys
 import struct
 
-# if sys.argv[1] == 'slc':
-#     drive = '/mnt/slc_drive/'
-#     type = 'slc'
-# elif sys.argv[1] == 'mlc1':
-#     drive = '/mnt/mlc1_drive/'
-#     type = 'mlc'
-# elif sys.argv[1] == 'mlc2':
-#     drive = '/mnt/mlc2_drive/'
-#     type = 'mlc'
+# Argument must be the drive number
+if sys.argv[1] == 'slc':
+    drive = '/mnt/slc_drive/'
+    type = 'slc'
+elif sys.argv[1] == 'mlc1':
+    drive = '/mnt/mlc1_drive/'
+    type = 'mlc'
+elif sys.argv[1] == 'mlc2':
+    drive = '/mnt/mlc2_drive/'
+    type = 'mlc'
 
-# DEBUG
-drive = ''
-type = 'slc'
+# Offset from end of file, this is the total number of bytes of each measurement
 offset = 8240
 
+# Spectrometer tuple
 spectrum = []
+
+# Reads in datafile and unpacks data from binary format
 with open(drive + 'datafile','rb') as f:
     f.seek(-offset,os.SEEK_END)
     timestamp = struct.unpack('I',f.read(4))
@@ -38,6 +41,7 @@ with open(drive + 'datafile','rb') as f:
     ads3 = struct.unpack('f',f.read(4))
     ads4 = struct.unpack('f',f.read(4))
 
+# Data readout format
 data_format = """Drive: {0}
 Timestamp: {1}
 ENV Hum: {2} %; ENV Temp: {3} C;
@@ -60,3 +64,5 @@ print(data_format.format(drive,
                          ads3,
                          ads4))
                     
+# Print image file size if necessary
+print('Image file size: {size}'.format(size=os.path.getsize(drive+'imagefile')))
