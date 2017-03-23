@@ -9,9 +9,9 @@ namespace RADIANCE {
   public:
 
     // Initialize the heater with the gpio pin as argument
-    HeaterControl(int agpio_pin);
+    HeaterControl(int gpio_pin);
 
-    // Turn the heater on or off
+    // Turn the heater on
     void CommandHeaterOn();
 
     // Turn the heater off
@@ -21,14 +21,14 @@ namespace RADIANCE {
     bool IsHeaterOn();
   private:
     // The heater GPIO pin number, passed into the constructor
-    const int gpio_pin;
+    const int gpio_pin_;
 
     // Current heater status
-    bool is_heater_on;
+    bool is_heater_on_;
 
     // The heater on and off values range between 0 and 255
-    const int kPwmHeaterOff{0};
-    const int kPwmHeaterOn{255};
+    const int kPwmHeaterOff = 0;
+    const int kPwmHeaterOn = 0;
 
   };
 

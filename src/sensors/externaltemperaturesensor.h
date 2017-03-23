@@ -17,7 +17,7 @@ private:
     float ConvertBlockDataToTemperature(char* buf);
 
     // Linux file handler
-    int file_handle;
+    int file_handle_;
 
     // I2C software address
     const int kI2cAddress = 0x48;

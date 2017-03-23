@@ -4,6 +4,12 @@
 
 namespace RADIANCE{
 
+    // Set to one if reset is necessary
+    static int reset_counter;
+
+    // Pulse track counter
+    static int pulse_counter;
+  
   // Callback function for each edge
   void HumiditySensor::EdgeCallbackFunction(int gpio, int level, uint32_t tick)
   {
@@ -13,13 +19,14 @@ namespace RADIANCE{
         pulse_counter = 0;
       }
 
-    /* only record low to high edges */
+    // only record low to high edges
     if (level == 1)
       pulse_counter++;
   }
   
   // Initializes humidity sensor and prepares it for measurement
   HumiditySensor::HumiditySensor() {
+    gpioInitialise();
 
     int wave_id, mode;
     gpioPulse_t pulse[2];
@@ -40,7 +47,7 @@ namespace RADIANCE{
 
     wave_id = gpioWaveCreate();
 
-    // gpioSetAlertFunc(kGpioPin, EdgeCallbackFunction);
+    gpioSetAlertFunc(kGpioPin, EdgeCallbackFunction);
 
     mode = PI_INPUT;
 
@@ -61,7 +68,7 @@ namespace RADIANCE{
 
   // Converts frequency to humidity using a polynomial fit equation
   float HumiditySensor::ConvertFrequencyToHumidity(float freq) {
-    return 1.2158e-8*pow(freq,3)-2.193e-4*pow(freq,2)+1.2094*freq-1.8698e3;
+    return 1.2158e-8*std::pow(freq,3)-2.193e-4*std::pow(freq,2)+1.2094*freq-1.8698e3;
   }
 
 }

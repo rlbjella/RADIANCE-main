@@ -30,16 +30,8 @@ namespace RADIANCE{
   // Reads and writes the camera image
   void Camera::ReadImage(std::array<unsigned char,kImageSize>& image_data) {
 
-    // Allocate temporary image buffer
-    unsigned char image_buffer[kImageSize];
-
     // Retrieve the image in rgb format
-    raspicam_still_.grab_retrieve(image_buffer,kImageSize);
-
-    // Copy the image buffer to return the data
-    for (int i = 0; i < kImageSize; i++) {
-      image_data[i] = image_buffer[i];
-    }
+    raspicam_still_.grab_retrieve(image_data.data(),kImageSize);
   }
 
 }

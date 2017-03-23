@@ -1,69 +1,75 @@
 # Author: James Pavek
 # Reads last measurements from data files and prints to screen
-# Arguments-drive_name: Flash drive name to print information from
 
 import os
 import sys
 import struct
 
-drive = ''
-type = ''
-# Argument must be the drive number
-if sys.argv[1] == 'slc':
-    drive = '/mnt/slcdrive/'
-    type = 'slc'
-elif sys.argv[1] == 'mlc1':
-    drive = '/mnt/mlcdrive1/'
-    type = 'mlc'
-elif sys.argv[1] == 'mlc2':
-    drive = '/mnt/mlcdrive2/'
-    type = 'mlc'
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
 
+drive_list = ['/mnt/slc_drive','/mnt/mlc1_drive','/mnt/mlc2_drive']
 # Offset from end of file, this is the total number of bytes of each measurement
 offset = 8240
-
-# Reads in datafile and unpacks data from binary format
-with open(drive + 'datafile','rb') as f:
-    f.seek(-offset,os.SEEK_END)
-    timestamp = struct.unpack('I',f.read(4))
-    spectrum = struct.unpack('2048f',f.read(2048*4))
-    spec_temp = struct.unpack('f',f.read(4))
-    rpi_temp = struct.unpack('f',f.read(4))
-    hk_temp_bat1 = struct.unpack('f',f.read(4))
-    hk_temp_bat2 = struct.unpack('f',f.read(4))
-    hk_temp_slc = struct.unpack('f',f.read(4))
-    env_temp = struct.unpack('f',f.read(4))
-    env_hum = struct.unpack('f',f.read(4))
-    ads1 = struct.unpack('f',f.read(4))
-    ads2 = struct.unpack('f',f.read(4))
-    ads3 = struct.unpack('f',f.read(4))
-    ads4 = struct.unpack('f',f.read(4))
-
 # Data readout format
-data_format = """Drive: {0}
+data_format = """
+Drive: {0}
 Timestamp: {1}
 ENV Hum: {2} %; ENV Temp: {3} C;
 HK Temp SLC: {4} C;  HK Temp Bat1: {5} C;  HK Temp Bat2:{6} C
-Spec Temp: {7} C; RPi Temp: {8} C;
-Spec(First pixel): {9}
-ADS1: {10} A; ADS2: {11} A; ADS3: {12} A; ADS4: {13} A; """
+Spec Temp: {7} C; RPi Temp: {8} C; Spec: {9}
+ADS1: {10} A; ADS2: {11} A; ADS3: {12} A; ADS4: {13} A;
+"""
 
-print(data_format.format(drive,
-                         timestamp,
-                         env_hum,
-                         env_temp,
-                         hk_temp_slc,
-                         hk_temp_bat1,
-                         hk_temp_bat2,
-                         spec_temp,
-                         rpi_temp,
-                         spectrum[0],
-                         ads1,
-                         ads2,
-                         ads3,
-                         ads4))
-                    
+print('------')
+for drive in drive_list:
+    if 'mlc' in drive:
+        type = 'mlc'
+    elif 'slc' in drive:
+        type = 'slc'
+    else:
+        print('Can\'t find drive type')
+        
+    # Reads in datafile and unpacks data from binary format
+    with open(drive + 'datafile','rb') as f:
+        f.seek(-offset,os.SEEK_END)
+        timestamp = struct.unpack('I',f.read(4))
+        spectrum = struct.unpack('2048f',f.read(2048*4))
+        spec_temp = struct.unpack('f',f.read(4))
+        rpi_temp = struct.unpack('f',f.read(4))
+        hk_temp_bat1 = struct.unpack('f',f.read(4))
+        hk_temp_bat2 = struct.unpack('f',f.read(4))
+        hk_temp_slc = struct.unpack('f',f.read(4))
+        env_temp = struct.unpack('f',f.read(4))
+        env_hum = struct.unpack('f',f.read(4))
+        ads1 = struct.unpack('f',f.read(4))
+        ads2 = struct.unpack('f',f.read(4))
+        ads3 = struct.unpack('f',f.read(4))
+        ads4 = struct.unpack('f',f.read(4))
 
-# Print image file size if necessary
-if type=='mlc':
-    print('Image file size: {size}'.format(size=os.path.getsize(drive+'imagefile')))
+
+    print(data_format.format(drive,
+                            timestamp,
+                            env_hum,
+                            env_temp,
+                            hk_temp_slc,
+                            hk_temp_bat1,
+                            hk_temp_bat2,
+                            spec_temp,
+                            rpi_temp,
+                            spectrum[0],
+                            ads1,
+                            ads2,
+                            ads3,
+                            ads4))
+
+
+    # Print image file size if necessary
+    if type=='mlc':
+        print('Image file size: {size}'.format(sizeof_fmt(size=os.path.getsize(drive+'imagefile'))))
+
+print('------')

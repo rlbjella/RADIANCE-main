@@ -24,20 +24,20 @@ namespace RADIANCE {
     gpioWrite(21, 1);
 
     // Construct SPI device for 1MHz and 8 bit words
-    adc = ltc2470("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
+    adc_ = ltc2470("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
   }
 
   // Returns the attitude angle
   void AttitudeSensor::ReadAttitude(std::array<float,kNumPhotodiodes>& f_current){
 
     for (int i = 0; i < kNumPhotodiodes; i ++) {
-      f_current[i] = ReadAdc(i,adc);
+      f_current[i] = ReadAdc(i);
     }
 
   }
 
   // Function to read current from a specified photodiode
-  float AttitudeSensor::ReadAdc(unsigned char pdiode, ltc2470 adc){
+  float AttitudeSensor::ReadAdc(unsigned char pdiode){
     unsigned int dn = 0;
     float current = 0;
     unsigned int rf;	// Feedback resistance
@@ -58,7 +58,10 @@ namespace RADIANCE {
     else if(pdiode == 2){
       gpioWrite(21, 0);
       rf = kResistorValue4;
+    } else {
+      std::cerr << "Unknown resistor value" << std::endl;
     }
+    
 
     // Construct the data register
     unsigned char data[3] = {1, // Start bit
@@ -66,7 +69,7 @@ namespace RADIANCE {
                              0};         // Unused byte
 
     // Call the read/write function of SPI object to get AD conversion
-    adc.spiWriteRead(data, sizeof(data));
+    adc_.spiWriteRead(data, sizeof(data));
 
     // Get result from data registers
     dn = (data[1] << 8) & 0b1100000000;

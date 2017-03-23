@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <chrono>
-#include <typeinfo>
+#include <limits>
 #include <iostream>
 #include <thread>
+#include <stdexcept>
 #include "../include/avaspec/avaspec.h"
 #include "systemhaltexception.h"
 #include "datahandler.h"
@@ -11,20 +12,6 @@
 #include "controls/heatercontrol.h"
 
 namespace RADIANCE {
-
-  DataHandler::DataHandler() {
-
-    // Setup and configure measurement storage
-    // Open file objects in binary append mode
-    // C file utilities are used for performance
-    slc_data_file = fopen("/mnt/slcdrive/datafile", "ab");
-    mlc1_data_file = fopen("/mnt/mlcdrive1/datafile", "ab");
-    mlc2_data_file = fopen("/mnt/mlcdrive2/datafile", "ab");
-
-    mlc1_image_file = fopen("/mnt/mlcdrive1/imagefile", "ab");
-    mlc2_image_file = fopen("/mnt/mlcdrive2/imagefile", "ab");
-
-  }
 
   // Reads a measurement from each sensor and places it into the
   // science data struct.
@@ -35,25 +22,43 @@ namespace RADIANCE {
     // Read timestamp measurement
     // This timestamp represents seconds since Unix epoch
     std::chrono::seconds ms = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
-    frame_data.time_stamp = ms.count();
-    std::cout << "Timestamp: " << frame_data.time_stamp << "; ";
+    frame_data_.time_stamp = ms.count();
+    std::cout << "Timestamp: " << frame_data_.time_stamp << "; ";
 
     // Read main instrument(spectrometer)
-    spectrometer_.ReadSpectrum(frame_data.spectrum);
+    spectrometer_.ReadSpectrum(frame_data_.spectrum);
 
     // Read housekeeping(engineering) sensors
-    frame_data.spectrometer_temperature = spectrometer_.ReadSpectrometerTemperature();
-    frame_data.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
-    frame_data.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
-    frame_data.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
-    frame_data.storage_temperature = storage_temperature_sensor_.ReadTemperature();
-    frame_data.external_temperature = external_temperature_sensor_.ReadTemperature();
-    frame_data.humidity = humidity_sensor_.ReadHumidity();
-    attitude_sensor_.ReadAttitude(frame_data.attitude_values); //DEBUG
+    frame_data_.spectrometer_temperature = spectrometer_.ReadSpectrometerTemperature();
+    frame_data_.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
+
+    // Read internal temperature sensors
+    // If the sensors are not responding, assume heating is not needed so return large number
+    try {
+      frame_data_.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
+    } catch (const std::exception& e) {
+      frame_data_.upper_battery_temperature = std::numeric_limits<float>::max();
+    }
+
+    try {
+      frame_data_.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
+    } catch (const std::exception& e) {
+      frame_data_.lower_battery_temperature = std::numeric_limits<float>::max();
+    }
+
+    try {
+      frame_data_.storage_temperature = storage_temperature_sensor_.ReadTemperature();
+    } catch (const std::exception& e) {
+      frame_data_.storage_temperature = std::numeric_limits<float>::max();
+    }
+
+    frame_data_.external_temperature = external_temperature_sensor_.ReadTemperature();
+    frame_data_.humidity = humidity_sensor_.ReadHumidity();
+    attitude_sensor_.ReadAttitude(frame_data_.attitude_values);
 
     // Take a picture every 60 frames
     if (frame_counter==59) {
-    camera_.ReadImage(frame_data.image);
+      camera_.ReadImage(frame_data_.image);
     }
   }
 
@@ -62,66 +67,89 @@ namespace RADIANCE {
   // frame_counter: Used to determine a picture needs to be written
   void DataHandler::WriteFrameToStorage(const int frame_counter) {
 
+    // Make sure at least one data file can be written to
+    // If not, restart the system
+    if (!slc_data_file_.good() && !mlc1_data_file_.good() && !mlc2_data_file_.good()) {
+      throw SystemHaltException();
+    }
+
     // Writes the data(measurements) to all three drives every second
-    WriteDataToFile(slc_data_file);
-    WriteDataToFile(mlc1_data_file);
-    WriteDataToFile(mlc2_data_file);
+    WriteDataToFile(slc_data_file_);
+    WriteDataToFile(mlc1_data_file_);
+    WriteDataToFile(mlc2_data_file_);
 
     // Write an image to just the MLC drives every minute
     if (frame_counter==59) {
-      WriteImagesToFile(mlc1_image_file);
-      WriteImagesToFile(mlc2_image_file);
+      WriteImagesToFile();
     }
   }
 
   // Gets the frame_data struct for other routines
-  DataHandler::frame_data_type DataHandler::GetFrameData() {return frame_data;}
+  DataHandler::frame_data_type DataHandler::GetFrameData() {return frame_data_;}
 
   // Writes the frame data to the given file
   // Inputs:
-  // file: The C file object to write to
-  void DataHandler::WriteDataToFile(FILE* file) {
-    // Null pointer check
-    if (!file) {
-      throw SystemHaltException();
+  // file: The ofstream object to write to. If the file cannot be found/written to do nothing
+  void DataHandler::WriteDataToFile(std::ofstream& file) {
+
+    // Check that the data file is OK
+    // If not OK, do nothing
+    if (file.good()) {
+    
+      // Write timestamp of measurement
+      file << frame_data_.time_stamp;
+
+      // Write the spectrometer measurements
+      for (auto& i : frame_data_.spectrum) {
+        file << i;
+      }
+      // Write the engineering/housekeeping measurements to the given file
+      file << frame_data_.spectrometer_temperature;
+      file << frame_data_.rpi_temperature;
+      file << frame_data_.upper_battery_temperature;
+      file << frame_data_.lower_battery_temperature;
+      file << frame_data_.storage_temperature;
+      file << frame_data_.external_temperature;
+      file << frame_data_.humidity;
+
+      // Write the attitude measurements
+      for (auto& i : frame_data_.attitude_values) {
+        file << i;
+      }
+
     }
-
-    // Write timestamp of measurement
-    fwrite(&frame_data.time_stamp, sizeof(unsigned int), 1, file);
-
-    // Write the engineering/housekeeping measurements to the given file
-    fwrite(frame_data.spectrum.data(), sizeof(float), Spectrometer::kNumPixels, file);
-    fwrite(&frame_data.spectrometer_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.rpi_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.upper_battery_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.lower_battery_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.storage_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.external_temperature, sizeof(float), 1, file);
-    fwrite(&frame_data.humidity, sizeof(float), 1, file);
-    fwrite(frame_data.attitude_values.data(), sizeof(float), AttitudeSensor::kNumPhotodiodes, file);
-
-    // Flush the buffers after each write
-    fflush(file);
   }
 
 
-  // Writes the images to the given file
-  // Inputs: 
-  // file: The C file object to write to
-  void DataHandler::WriteImagesToFile(FILE* file) {
-    // Null pointer check
-    if (!file) {
-      throw SystemHaltException();
+  // Writes the images to storage
+  // If image drives cannot be found, print debug information but do nothing
+  void DataHandler::WriteImagesToFile() {
+
+    // Use timestamp as filename
+    std::string filename(std::to_string(frame_data_.time_stamp));
+
+    // Attempt to write mlc1 images
+    std::ofstream mlc1_image_file("/mnt/mlcdrive1/images/" + filename,std::ios::binary|std::ios::app);
+    if (mlc1_image_file.good()) {
+      for (auto& i : frame_data_.image) {
+        mlc1_image_file << i;
+      }
+    } else {
+      std::cerr << "Could not write images to mlcdrive2" << std::endl;
     }
+    mlc1_image_file.close();
 
-    // Write timestamp of image
-    fwrite(&frame_data.time_stamp, sizeof(float), 1, file);
+    // Attempt to write mlc2 images
+    std::ofstream mlc2_image_file("/mnt/mlcdrive2/images/" + filename,std::ios::binary|std::ios::app);
+    if (mlc2_image_file.good()) {
+      for (auto& i : frame_data_.image) {
+        mlc2_image_file << i;
+      }
+    } else {
+      std::cerr << "Could not write images to mlcdrive2" << std::endl;
+    }
+    mlc2_image_file.close();
 
-    // Write image to the given file
-    fwrite(frame_data.image.data(), sizeof(float), Camera::kImageSize, file);
-
-    // Flush the buffers after each write
-    fflush(file);
   }
 
 }

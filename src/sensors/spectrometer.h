@@ -23,6 +23,9 @@ namespace RADIANCE {
     // Spectrometer reference handle
     AvsHandle handle_;
 
+    // Spectrometer measurement config
+    MeasConfigType meas_config_;
+
     // Converts the voltage into a temperature
     float ConvertVoltageToTemperature(float voltage);
 

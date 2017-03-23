@@ -1,33 +1,37 @@
 # RADIANCE-main
 Software repository for the RADIANCE senior project.
 
+# Configuration
+- Ensure the heater and sensor pin numbers are correct
 # Requirements
-Install the pigpio, avaspec, and raspicam packages.
+- Install the pigpio, avaspec, and raspicam packages.
 
-Enable access to I2C, SPI, and 1-Wire via `sudo raspi-config`.
+- Enable access to I2C, SPI, and 1-Wire via `sudo raspi-config`.
 
-Copy the RADIANCE-main repository and the provided header files onto the Pi.
-# Compilation
+- Copy provided header files onto the Pi.
 
-To compile:
+- Add the following to the cron tab:
 ```
-cd RADIANCE-main
-make
-```
-# Installation
-- Add the startup script to startup on boot:
-
-```
-mv radiance /etc/init.d/radiance
-chmod 755 /etc/init.d/radiance
-update-rc.d radiance defaults
-```
-- Add a Cron job to check every 5 minutes and reboot if not running:
-```
+@reboot sh /home/pi/RADIANCE-main/util/startup.sh &> /home/pi/stdout_pipe
 */5 * * * * /home/pi/RADIANCE-main/util/restart.sh >/dev/null 2>&1
 ```
-- Make sure the partition is formatted with a journaled partition like ext3. The journaling mode should be selected for maximum write safety.
+
+- Format the USB drives/slc card as ext4 with maximum write safety.
 
 - Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
+# Compilation
 
-- Mount the USB drive(s) with journaling and sync enabled
+To download/compile:
+```
+git clone https://github.com/JamesPavek/RADIANCE-main.git
+cd RADIANCE-main
+sudo make
+```
+
+# Execution
+
+To run:
+
+```
+sudo ./radiance
+```

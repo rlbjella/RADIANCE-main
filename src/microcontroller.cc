@@ -19,13 +19,13 @@ namespace RADIANCE {
   }
 
   // Steps one frame. Resets if frame counter is zero
-  // frame_counter should always be between 0 and 59
+  // frame_counter_ should always be between 0 and 59
   void Microcontroller::UpdateFrameCounter() {
 
-    if (Microcontroller::frame_counter<59) {
-      Microcontroller::frame_counter++;
-    } else if (Microcontroller::frame_counter==59) {
-      Microcontroller::frame_counter = 0;
+    if (Microcontroller::frame_counter_<59) {
+      Microcontroller::frame_counter_++;
+    } else if (Microcontroller::frame_counter_==59) {
+      Microcontroller::frame_counter_ = 0;
     } else {
       // This should never happen
       throw SystemHaltException();
@@ -56,8 +56,7 @@ namespace RADIANCE {
   }
 
   // Start the system (infinite) loop 
-  // System process is the following: Read -> Write -> Sleep; time
-  // taken is also calculated
+  // System process is the following: Read -> Control Temperature -> Write -> Sleep(if necessary); 
   void Microcontroller::StartLoop() {
 
     std::chrono::high_resolution_clock::time_point begin,end;
@@ -69,30 +68,28 @@ namespace RADIANCE {
       begin = std::chrono::high_resolution_clock::now();
 
       // Read all sensors
-      data_handler_.ReadSensorData(Microcontroller::frame_counter);
+      data_handler_.ReadSensorData(Microcontroller::frame_counter_);
 
       // Update the heater output
       Microcontroller::SetThermalControl(data_handler_.GetFrameData());
 
       // Write processed data to storage
-      data_handler_.WriteFrameToStorage(Microcontroller::frame_counter);
+      data_handler_.WriteFrameToStorage(Microcontroller::frame_counter_);
 
       // Step one frame
       UpdateFrameCounter();
 
-      // Calculate time taken
+      // Calculate time taken(for heartbeat information)
       end = std::chrono::high_resolution_clock::now();
       std::chrono::duration<float> fs = end - begin;
       std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(fs);
       std::cout << "Milliseconds taken: " << ms.count() << std::endl; // DEBUG
 
       // Sleep, if necessary
+      // This reduces the chance that too much data will be taken on the storage
       if (ms < std::chrono::milliseconds(1000)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000)-ms);
-      } else{
-        std::cout << "Could not finish in 1 second" << std::endl; // DEBUG
       }
-
 
     }
   }

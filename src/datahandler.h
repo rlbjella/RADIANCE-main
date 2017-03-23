@@ -17,10 +17,6 @@ namespace RADIANCE {
   // The read functions set the data in the science data struct
   class DataHandler{
   public:
-
-    // Setup and configure sensors
-    DataHandler();
-
     // Reads a measurement from each sensor and places it into the
     // science data struct.
     void ReadSensorData(const int frame_counter);
@@ -49,35 +45,30 @@ namespace RADIANCE {
   private:
 
     // Holds the science data for each frame
-    frame_data_type frame_data;
+    frame_data_type frame_data_;
 
     // Sensor data members
     Spectrometer spectrometer_;
     HumiditySensor humidity_sensor_;
     RPiTemperatureSensor rpi_temperature_sensor_;
-    InternalTemperatureSensor upper_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/10-000803362138/w1_slave"}; // File location
-    InternalTemperatureSensor lower_battery_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-00000620a9b2/w1_slave"}; // File location
-    InternalTemperatureSensor storage_temperature_sensor_{"/sys/bus/w1/drivers/w1_slave_driver/28-0000075f85ba/w1_slave"}; // File location
+    InternalTemperatureSensor upper_battery_temperature_sensor_{"28-00000620a9b2"}; // Sensor serial number
+    InternalTemperatureSensor lower_battery_temperature_sensor_{"28-00000620a9b2"};
+    InternalTemperatureSensor storage_temperature_sensor_{"28-00000620a9b2"};
     ExternalTemperatureSensor external_temperature_sensor_;
     AttitudeSensor attitude_sensor_;
     Camera camera_;
 
     // Storage data objects for regular data
     // These are kept open for performance
-    FILE* slc_data_file;
-    FILE* mlc1_data_file;
-    FILE* mlc2_data_file;
-
-    // Image data objects, these are also kept open
-    FILE* mlc1_image_file;
-    FILE* mlc2_image_file;
-
+    std::ofstream slc_data_file_{"/mnt/slcdrive/datafile",std::ios::binary|std::ios::app};
+    std::ofstream mlc1_data_file_{"/mnt/mlcdrive1/datafile",std::ios::binary|std::ios::app};
+    std::ofstream mlc2_data_file_{"/mnt/mlcdrive2/datafile",std::ios::binary|std::ios::app};
 
     // Writes the frame data to the given file
-    void WriteDataToFile(FILE* file);
+    void WriteDataToFile(std::ofstream& file);
 
     // Writes the images to the given file
-    void WriteImagesToFile(FILE* file);
+    void WriteImagesToFile();
   };
 
 } // namespace RADIANCE

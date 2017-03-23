@@ -10,14 +10,18 @@ namespace RADIANCE {
 
   public:
     // Set location based on serial number
-  InternalTemperatureSensor(char* aserial_str);
+    InternalTemperatureSensor(std::string serial_str);
 
     // Return a temperature measurement
     float ReadTemperature();
   private:
 
     // Serial number of device, used for opening the sensor file
-    const char* kLocationStr;
+    const std::string sensor_file_;
+
+    // Path to slave device
+    const std::string kLocationStrPrefix{"/sys/bus/w1/drivers/w1_slave_driver/"};
+    const std::string kLocationStrPostfix{"/w1_slave"};
 
   };
 

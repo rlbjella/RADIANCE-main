@@ -1,6 +1,6 @@
 #ifndef RADIANCE_SRC_SENSORS_ATTITUDESENSOR_H_
 #define RADIANCE_SRC_SENSORS_ATTITUDESENSOR_H_
-#include "ltc2470.h"
+#include "../../include/ltc2470/ltc2470.h"
 #include <cmath>
 
 namespace RADIANCE {
@@ -19,11 +19,12 @@ namespace RADIANCE {
     void ReadAttitude(std::array<float,kNumPhotodiodes>& f_current);
 
   private:
-    // SPI ADC device
-    ltc2470 adc;
 
     // Reads a specific adc
-    float ReadAdc(unsigned char pdiode, ltc2470 adc);
+    float ReadAdc(unsigned char pdiode);
+
+    // SPI ADC device
+    ltc2470 adc_;
 
     // Resistor values in ohms
     const unsigned int kResistorValue1 = 5000;
@@ -32,7 +33,7 @@ namespace RADIANCE {
     const unsigned int kResistorValue4 = 5000;
 
 	// Resolution of ADC, equal to 2^(bits)-1
-	const unsigned int kAdcResolution = (unsigned int)(pow(2,16) - 1);
+	const unsigned int kAdcResolution = (std::pow(2,16) - 1);
 
     // Reference voltage
     const float kReferenceVoltage = 3.3;

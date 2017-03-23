@@ -1,29 +1,46 @@
-#include <iostream>
+#include <fstream>
 #include <string.h>
 #include <unistd.h>
+#include <iostream>
+#include <stdexcept>
 #include "internaltemperaturesensor.h"
 
 namespace RADIANCE{
 
   // Set sensor location based on serial number
-  InternalTemperatureSensor::InternalTemperatureSensor(char* aserial_str):kLocationStr(aserial_str) {}
+  InternalTemperatureSensor::InternalTemperatureSensor(std::string sensor_file):sensor_file_(sensor_file) {
+  }
 
   // Reads temperature from temperature file
   // Opens the sensor file, filter to the temperature and covert to celcius
+  // Throws runtime_error if the temperature file could not be read
   float InternalTemperatureSensor::ReadTemperature() {
-    // Open the file and save the file handle
-    int fd = open(kLocationStr, O_RDONLY);
 
-    // Initialize the buffer and read 256 bytes
-    char buf[256];
-    read(fd, buf, 256);
+    // Open the file and save the file handle
+    std::ifstream temp_file(kLocationStrPrefix + sensor_file_ + kLocationStrPostfix);
+
+    // If the file cannot be read from return null
+    if (!temp_file.good()) {
+      std::string error_message("Could not open temperature file: " + sensor_file_);
+      throw std::runtime_error(error_message);
+    }
+
+    // Read the file into a buffer
+    std::string buf((std::istreambuf_iterator<char>(temp_file)),
+                 std::istreambuf_iterator<char>());
+
+    // Check if the file has the standard format
+    auto match = buf.find("t=");
+
+    if (match == std::string::npos) {
+      std::string error_message("Temperature file does not contain proper format: " + sensor_file_);
+      throw std::runtime_error(error_message);
+    }
 
     // Cut the string to just the temperature information
-    char tmp_data[6];
-    strncpy(tmp_data, strstr(buf, "t=") + 2, 5); 
+    std::string temp_str(buf.substr(match,5));
 
     // Convert the string to float
-    float temp = strtof(tmp_data, NULL);
-    return temp/1000;
+    return std::stof(temp_str);
   }
 }

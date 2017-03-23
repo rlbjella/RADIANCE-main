@@ -26,7 +26,7 @@ namespace RADIANCE {
     // Keeps track of frame number.
     // Used for determining if a picture needs to be taken
     // Resets every 60th frame
-    int frame_counter = 0;
+    int frame_counter_ = 0;
 
     // Minimum and maximum heater temperatures
     const float kMinHeaterTemp = 1;
@@ -35,9 +35,9 @@ namespace RADIANCE {
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
 
-    // Initialize the heater controls. The argument is the PWM pin number
-    HeaterControl battery_heater_ = HeaterControl(1);
-    HeaterControl spectrometer_heater_ = HeaterControl(1);
+    // Initialize the heater controls. 
+    HeaterControl battery_heater_{16};      // GPIO pin number
+    HeaterControl spectrometer_heater_{18}; // GPIO pin number
   };
 
 } // namespace RADIANCE
