@@ -24,7 +24,7 @@ namespace RADIANCE {
     float ReadAdc(unsigned char pdiode);
 
     // SPI ADC device
-    ltc2470 adc_;
+    ltc2470* adc_;
 
     // Resistor values in ohms
     const unsigned int kResistorValue1 = 5000;

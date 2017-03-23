@@ -17,48 +17,91 @@ namespace RADIANCE {
   // science data struct.
   // Inputs: 
   // frame_counter: Used to determine whether a picture is needed
+  // In general, if housekeep sensors cannot be read return high heater temperature
+  // If science instruments cannot be read return zero
   void DataHandler::ReadSensorData(const int frame_counter) {
 
     // Read timestamp measurement
     // This timestamp represents seconds since Unix epoch
     std::chrono::seconds ms = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
     frame_data_.time_stamp = ms.count();
-    std::cout << "Timestamp: " << frame_data_.time_stamp << "; ";
+    std::cout << "Timestamp: " << frame_data_.time_stamp << std::endl;
 
     // Read main instrument(spectrometer)
     spectrometer_.ReadSpectrum(frame_data_.spectrum);
 
-    // Read housekeeping(engineering) sensors
-    frame_data_.spectrometer_temperature = spectrometer_.ReadSpectrometerTemperature();
-    frame_data_.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
+    // Read temperature sensors
+    // These sensors are used for heater control. Overheating is a concern, so 
+    // if the sensors are not responding, assume sensor is already at desired temperature
+    try {
+      frame_data_.spectrometer_temperature = spectrometer_.ReadSpectrometerTemperature();
+    } catch (const std::exception& e) {
+      std::cerr << "Could not read spectrometer temp sensor" << std::endl;
+      frame_data_.spectrometer_temperature = Microcontroller::GetMaxHeaterTemp();
+    }
 
-    // Read internal temperature sensors
-    // If the sensors are not responding, assume heating is not needed so return large number
+    try {
+      frame_data_.rpi_temperature = rpi_temperature_sensor_.ReadTemperature();
+    } catch (const std::exception& e) {
+      std::cerr << "Could not read RPi temp sensor" << std::endl;
+      frame_data_.rpi_temperature = Microcontroller::GetMaxHeaterTemp();
+    }
+
     try {
       frame_data_.upper_battery_temperature = upper_battery_temperature_sensor_.ReadTemperature();
     } catch (const std::exception& e) {
-      frame_data_.upper_battery_temperature = std::numeric_limits<float>::max();
+      std::cerr << "Could not read upper battery temp sensor" << std::endl;
+      frame_data_.upper_battery_temperature = Microcontroller::GetMaxHeaterTemp();
     }
 
     try {
       frame_data_.lower_battery_temperature = lower_battery_temperature_sensor_.ReadTemperature();
     } catch (const std::exception& e) {
-      frame_data_.lower_battery_temperature = std::numeric_limits<float>::max();
+      std::cerr << "Could not read lower battery temp sensor" << std::endl;
+      frame_data_.lower_battery_temperature = Microcontroller::GetMaxHeaterTemp();
     }
 
     try {
       frame_data_.storage_temperature = storage_temperature_sensor_.ReadTemperature();
     } catch (const std::exception& e) {
-      frame_data_.storage_temperature = std::numeric_limits<float>::max();
+      std::cerr << "Could not read storage temp sensor" << std::endl;
+      frame_data_.storage_temperature = Microcontroller::GetMaxHeaterTemp();
     }
 
-    frame_data_.external_temperature = external_temperature_sensor_.ReadTemperature();
-    frame_data_.humidity = humidity_sensor_.ReadHumidity();
-    attitude_sensor_.ReadAttitude(frame_data_.attitude_values);
+    // Read environmental conditions
+    // Sensor is not used in heating calculations, so return 0
+    try {
+      frame_data_.external_temperature = external_temperature_sensor_.ReadTemperature();
+    } catch (const std::exception& e) {
+      std::cerr << "Could not read env temp sensor" << std::endl;
+      frame_data_.external_temperature = 0;
+    }
+
+    try {
+      frame_data_.humidity  = humidity_sensor_.ReadHumidity();
+    } catch (const std::exception& e) {
+      std::cerr << "Could not read humidity sensor" << std::endl;
+      frame_data_.humidity = 0;
+    }
+
+    // Read atittude system
+    // If ADCS cannot be read, return zero for all measurements
+    try {
+      attitude_sensor_.ReadAttitude(frame_data_.attitude_values);
+    } catch (const std::exception& e) {
+      std::cerr << "Could not read attitude system" << std::endl;
+      std::fill(frame_data_.attitude_values.begin(),frame_data_.attitude_values.end(),0);
+    }
 
     // Take a picture every 60 frames
+    // If camera cannot be read, return zero for all pixels
     if (frame_counter==59) {
-      camera_.ReadImage(frame_data_.image);
+      try {
+        camera_.ReadImage(frame_data_.image);
+      } catch (const std::exception& e) {
+        std::cerr << "Could not read from camera" << std::endl;
+        std::fill(frame_data_.image.begin(),frame_data_.image.end(),0);
+      }
     }
   }
 

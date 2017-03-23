@@ -19,7 +19,7 @@ namespace RADIANCE{
     // Open the file and save the file handle
     std::ifstream temp_file(kLocationStrPrefix + sensor_file_ + kLocationStrPostfix);
 
-    // If the file cannot be read from return null
+    // If the file cannot be read from throw runtime error
     if (!temp_file.good()) {
       std::string error_message("Could not open temperature file: " + sensor_file_);
       throw std::runtime_error(error_message);
@@ -30,13 +30,12 @@ namespace RADIANCE{
                  std::istreambuf_iterator<char>());
 
     // Check if the file has the standard format
-    auto match = buf.find("t=");
+    int match = buf.find("t=");
 
     if (match == std::string::npos) {
       std::string error_message("Temperature file does not contain proper format: " + sensor_file_);
       throw std::runtime_error(error_message);
     }
-
     // Cut the string to just the temperature information
     std::string temp_str(buf.substr(match,5));
 

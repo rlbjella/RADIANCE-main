@@ -15,7 +15,7 @@ namespace RADIANCE {
   Microcontroller::Microcontroller() {
     // Set terminate handler to custom restart function
     // This will restart the pi if an unknown exception occurs
-    std::set_terminate(SystemHaltException::RestartSystem);
+    // std::set_terminate(SystemHaltException::RestartSystem);
   }
 
   // Steps one frame. Resets if frame counter is zero
@@ -54,6 +54,10 @@ namespace RADIANCE {
     }
 
   }
+
+  // Heater temp getters
+  float Microcontroller::GetMaxHeaterTemp() {return kMaxHeaterTemp;}
+  float Microcontroller::GetMinHeaterTemp() {return kMinHeaterTemp;}
 
   // Start the system (infinite) loop 
   // System process is the following: Read -> Control Temperature -> Write -> Sleep(if necessary); 

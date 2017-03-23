@@ -22,15 +22,20 @@ namespace RADIANCE {
     // Process the measured data and then write the heater output
     void SetThermalControl(DataHandler::frame_data_type frame_data);
 
+    // Heater temp getters
+    static float GetMaxHeaterTemp();
+    static float GetMinHeaterTemp();
+    
+
   private:
+    // Minimum and maximum heater temperatures
+    static constexpr float kMinHeaterTemp = 1;
+    static constexpr float kMaxHeaterTemp = 3;
+
     // Keeps track of frame number.
     // Used for determining if a picture needs to be taken
     // Resets every 60th frame
     int frame_counter_ = 0;
-
-    // Minimum and maximum heater temperatures
-    const float kMinHeaterTemp = 1;
-    const float kMaxHeaterTemp = 3;
 
     // Used to handle input/output of data from reading the sensors to storage
     DataHandler data_handler_;
@@ -39,6 +44,7 @@ namespace RADIANCE {
     HeaterControl battery_heater_{16};      // GPIO pin number
     HeaterControl spectrometer_heater_{18}; // GPIO pin number
   };
+
 
 } // namespace RADIANCE
 #endif //RADIANCE_SRC_MICROCONTROLLER_H_

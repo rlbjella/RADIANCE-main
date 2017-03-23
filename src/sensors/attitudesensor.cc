@@ -1,5 +1,7 @@
 #include <array>
+#include <string>
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <pigpio.h>
 #include "attitudesensor.h"
@@ -23,14 +25,22 @@ namespace RADIANCE {
     gpioWrite(20, 1);
     gpioWrite(21, 1);
 
+    std::ifstream spidev;
+    spidev.open("/dev/spidev0.0");
+
     // Construct SPI device for 1MHz and 8 bit words
-    adc_ = ltc2470("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
+    // If unsuccessful, do nothing
+    if (!spidev.good()) {
+    *adc_ = ltc2470("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
+    } else {
+      adc_ = 0;
+    }
   }
 
   // Returns the attitude angle
   void AttitudeSensor::ReadAttitude(std::array<float,kNumPhotodiodes>& f_current){
 
-    for (int i = 0; i < kNumPhotodiodes; i ++) {
+    for (int i = 0; i < kNumPhotodiodes-1; i ++) {
       f_current[i] = ReadAdc(i);
     }
 
@@ -43,11 +53,11 @@ namespace RADIANCE {
     unsigned int rf;	// Feedback resistance
 
     // Set necessary CS pin low to make corresponding ADC listen
-    if(pdiode == 1){
+    if(pdiode == 0){
       gpioWrite(12, 0);
       rf = kResistorValue1;
     }
-    else if(pdiode == 2){
+    else if(pdiode == 1){
       gpioWrite(16, 0);
       rf = kResistorValue2;
     }
@@ -55,12 +65,10 @@ namespace RADIANCE {
       gpioWrite(20, 0);
       rf = kResistorValue3;
     }
-    else if(pdiode == 2){
+    else {
       gpioWrite(21, 0);
       rf = kResistorValue4;
-    } else {
-      std::cerr << "Unknown resistor value" << std::endl;
-    }
+    } 
     
 
     // Construct the data register
@@ -68,8 +76,14 @@ namespace RADIANCE {
                              0b10000000, // Single-ended mode, channel 0
                              0};         // Unused byte
 
+
     // Call the read/write function of SPI object to get AD conversion
-    adc_.spiWriteRead(data, sizeof(data));
+    if (!adc_) {
+      throw std::runtime_error("Could not find ADC");
+    }
+
+    adc_->spiWriteRead(data, sizeof(data));
+
 
     // Get result from data registers
     dn = (data[1] << 8) & 0b1100000000;
