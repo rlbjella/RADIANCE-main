@@ -37,7 +37,8 @@ namespace RADIANCE{
       throw std::runtime_error(error_message);
     }
     // Cut the string to just the temperature information
-    std::string temp_str(buf.substr(match,5));
+    // The temperature information stats after 't='
+    std::string temp_str(buf.substr(match+2));
 
     // Convert the string to float
     return std::stof(temp_str);
