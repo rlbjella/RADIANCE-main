@@ -51,9 +51,9 @@ namespace RADIANCE {
     Spectrometer spectrometer_;
     HumiditySensor humidity_sensor_;
     RPiTemperatureSensor rpi_temperature_sensor_;
-    InternalTemperatureSensor upper_battery_temperature_sensor_{"28-00000620a9b2"}; // Sensor serial number
-    InternalTemperatureSensor lower_battery_temperature_sensor_{"28-00000620a9b2"};
-    InternalTemperatureSensor storage_temperature_sensor_{"28-00000620a9b2"};
+    InternalTemperatureSensor upper_battery_temperature_sensor_{"10-00080336550e"}; // Sensor serial number
+    InternalTemperatureSensor lower_battery_temperature_sensor_{"10-000803362138"};
+    InternalTemperatureSensor storage_temperature_sensor_{"10-00080336329d"};
     ExternalTemperatureSensor external_temperature_sensor_;
     AttitudeSensor attitude_sensor_;
     Camera camera_;
