@@ -79,7 +79,12 @@ This will update the software and grab the header files for the `include` folder
 # Execution
 
 To run:
-
 ```
 sudo ./radiance
+```
+
+# Restarting the Pi
+To restart the Pi (if you made configuration changes and want to be sure that they are reflected, for example), type this anywhere in the directory structure on the Pi:
+```
+pi@raspberrypi:~ $ /home/pi/RADIANCE-main/util/restart.sh
 ```
