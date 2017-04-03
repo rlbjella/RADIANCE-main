@@ -3,6 +3,7 @@ Software repository for the RADIANCE senior project.
 
 # Configuration
 - Ensure the heater and sensor pin numbers are correct
+
 # Requirements
 - Install the pigpio, avaspec, and raspicam packages.
 
@@ -42,9 +43,20 @@ Software repository for the RADIANCE senior project.
   UUID=5c0d5816-9b30-4041-a98d-71844d1dd6b9    /mnt/mlcdrive1 ext4  data=journal  0  0
   UUID=8f7a6e96-8b9a-428c-bb17-ddd595607f23    /mnt/mlcdrive2 ext4  data=journal  0  0
   ```
-  Exit and save the `fstab` file by doing a Ctrl+X, then type "Y" to save. 
+  Exit and save the `fstab` file by doing a Ctrl+X, type "Y" to save, then press Enter. 
   
 - Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
+  ```
+  pi@raspberrypi:~ $ sudo modprobe bcm2835-wdt
+  pi@raspberrypi:~ $ echo "bcm2835-wdt" | sudo tee -a /etc/modules
+  pi@raspberrypi:~ $ sudo apt-get install watchdog
+  pi@raspberrypi:~ $ sudo update-rc.d watchdog defaults
+  pi@raspberrypi:~ $ sudo nano /etc/watchdog.conf
+  ```
+  In the text editor, uncomment the line (delete the `#`) that starts with `#max-load-1` and uncomment the line that starts with `#watchdog-device`. Exit and save the file by doing a Ctrl+X, type "Y" to save, then press Enter. Finally, start the watchdog service:
+  ```
+  pi@raspberrypi:~ $ sudo service watchdog start
+  ```
 
 # Sync with Git and Compile
 To download/compile:
