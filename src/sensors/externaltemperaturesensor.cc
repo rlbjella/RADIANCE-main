@@ -13,6 +13,7 @@ namespace RADIANCE{
   float ExternalTemperatureSensor::ReadTemperature() {
     // Create buffer and read two bytes from register
     char buf[2];
+    gpioInitialise();
     i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2);
     return ConvertBlockDataToTemperature(buf);
   }
