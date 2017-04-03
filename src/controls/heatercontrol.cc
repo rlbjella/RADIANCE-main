@@ -8,6 +8,7 @@ namespace RADIANCE{
   // heater. Therefore, turning the PWM signal on and off turns the
   // heater on and off.
   HeaterControl::HeaterControl(int gpio_pin):gpio_pin_(gpio_pin) {
+    gpioInitialise();
     gpioSetMode(gpio_pin_,PI_OUTPUT);
     is_heater_on_ = false;
   }
