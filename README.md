@@ -29,8 +29,18 @@ Software repository for the RADIANCE senior project.
   ```
   Note: The second line will cause the RPi to restart every 5 minutes if the RADIANCE software is not running.
   
-- Format the USB drives/slc card as ext4 with maximum write safety.
-
+- Mount, format, and configure the USB drives as ext4 and data=journal: 
+  ```
+  pi@raspberrypi:~ $ sudo nano /etc/fstab
+  ```
+  Then add the following lines at the end of the document:
+  ```
+  UUID=3f7681a4-bed7-4bbf-b1fd-966d3cc6f79f    /mnt/slcdrive  ext4  data=journal  0  0
+  UUID=5c0d5816-9b30-4041-a98d-71844d1dd6b9    /mnt/mlcdrive1 ext4  data=journal  0  0
+  UUID=8f7a6e96-8b9a-428c-bb17-ddd595607f23    /mnt/mlcdrive2 ext4  data=journal  0  0
+  ```
+  Exit and save the `fstab` file by doing a Ctrl+X, then type "Y" to save. 
+  
 - Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
 # Compilation
 
