@@ -21,8 +21,6 @@ Software repository for the RADIANCE senior project.
   ```
   Arrow-down and choose `5 Interfacing Options`. Arrow-down and choose `P4 SPI`. Choose `Yes` when prompted. Repeat for `P5 I2C` and `P7 1-Wire`. When it asks you to reboot, say `Yes`.
   
-- Copy provided header files onto the Pi.
-
 - Edit the crontab and add the following two lines beneath the comments (note if you've done a fresh install the crontab won't exist, but it will make one automatically):
   ```
   pi@raspberrypi:~ $ crontab -e
@@ -46,14 +44,24 @@ Software repository for the RADIANCE senior project.
   Exit and save the `fstab` file by doing a Ctrl+X, then type "Y" to save. 
   
 - Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
-# Compilation
 
+# Sync with Git and Compile
 To download/compile:
 ```
 git clone https://github.com/JamesPavek/RADIANCE-main.git
 cd RADIANCE-main
 sudo make
 ```
+
+# If needed, update RADIANCE software
+- Do the following on the Pi:
+```
+pi@raspberrypi:~ $ cd ~/RADIANCE-main/
+pi@raspberrypi:~ $ git reset --hard
+pi@raspberrypi:~ $ git pull
+```
+This will update the software and grab the header files for the `include` folder.
+
 
 # Execution
 
