@@ -19,7 +19,7 @@ Software repository for the RADIANCE senior project.
   ```
   pi@raspberrypi:~ $ sudo raspi-config
   ```
-  Arrow-down and choose `5 Interfacing Options`. Arrow-down and choose `P4 SPI`. Choose `Yes` when prompted. Repeat for `P5 I2C` and `P7 1-Wire`. When it asks you to reboot, say `Yes`.
+  Arrow-down and choose `5 Interfacing Options`. Arrow-down and choose `P1 Camera`. Choose `Yes` when prompted. Repeat for `P4 SPI`, `P5 I2C` and `P7 1-Wire`. When it asks you to reboot, say `Yes`.
   
 - Edit the crontab and add the following two lines beneath the comments (note if you've done a fresh install the crontab won't exist, but it will make one automatically):
   ```
@@ -48,9 +48,9 @@ Software repository for the RADIANCE senior project.
 # Sync with Git and Compile
 To download/compile:
 ```
-git clone https://github.com/JamesPavek/RADIANCE-main.git
-cd RADIANCE-main
-sudo make
+pi@raspberrypi:~ $ git clone https://github.com/JamesPavek/RADIANCE-main.git
+pi@raspberrypi:~ $ cd RADIANCE-main
+pi@raspberrypi:~ $ sudo make
 ```
 
 # If needed, update RADIANCE software
