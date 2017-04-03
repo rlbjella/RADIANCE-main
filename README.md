@@ -15,8 +15,12 @@ Software repository for the RADIANCE senior project.
   ```
   To install raspicam, download file from Sourceforge: https://downloads.sourceforge.net/project/raspicam/raspicam-0.1.6.zip, then follow instructions here: http://www.uco.es/investiga/grupos/ava/node/40
 
-- Enable access to I2C, SPI, and 1-Wire via `sudo raspi-config`.
-
+- Enable access to I2C, SPI, and 1-Wire via `sudo raspi-config`:
+  ```
+  pi@raspberrypi:~ $ sudo raspi-config
+  ```
+  Arrow-down and choose `5 Interfacing Options`. Arrow-down and choose `P4 SPI`. Choose `Yes` when prompted. Repeat for `P5 I2C` and `P7 1-Wire`. When it asks you to reboot, say `Yes`.
+  
 - Copy provided header files onto the Pi.
 
 - Edit the crontab and add the following two lines beneath the comments (note if you've done a fresh install the crontab won't exist, but it will make one automatically):
