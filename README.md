@@ -12,6 +12,7 @@ Software repository for the RADIANCE senior project.
   
   ```
   pi@raspberrypi:~ $ wget http://www.jennykampmeier.com/libavs_2.0.1.0_armhf.deb
+  pi@raspberrypi:~ $ sudo dpkg -i libavs_2.0.1.0_armhf.deb
   ```
   To install raspicam, download file from Sourceforge: https://downloads.sourceforge.net/project/raspicam/raspicam-0.1.6.zip, then follow instructions here: http://www.uco.es/investiga/grupos/ava/node/40
 
