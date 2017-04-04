@@ -58,7 +58,10 @@ Software repository for the RADIANCE senior project.
   ```
   pi@raspberrypi:~ $ sudo service watchdog start
   ```
-
+- Create the log pipe:
+```
+  pi@raspberrypi:~ $ sudo mkfifo radiance_log
+  ```
 # Sync with Git and Compile
 To download/compile:
 ```
