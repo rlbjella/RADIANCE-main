@@ -48,9 +48,9 @@ namespace RADIANCE {
     // First average the two battery temperatures
     float avg_battery_temperature = (frame_data.upper_battery_temperature + frame_data.lower_battery_temperature)/2;
     if (avg_battery_temperature <= kMinHeaterTemp && !battery_heater_.IsHeaterOn()){
-      battery_heater_.CommandHeaterOff();
-    } else if (avg_battery_temperature >= kMaxHeaterTemp && battery_heater_.IsHeaterOn()) {
       battery_heater_.CommandHeaterOn();
+    } else if (avg_battery_temperature >= kMaxHeaterTemp && battery_heater_.IsHeaterOn()) {
+      battery_heater_.CommandHeaterOff();
     }
 
   }

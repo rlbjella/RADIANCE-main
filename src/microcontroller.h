@@ -29,8 +29,8 @@ namespace RADIANCE {
 
   private:
     // Minimum and maximum heater temperatures
-    static constexpr float kMinHeaterTemp = 15;
-    static constexpr float kMaxHeaterTemp = 17;
+    static constexpr float kMinHeaterTemp = 1;
+    static constexpr float kMaxHeaterTemp = 3;
 
     // Keeps track of frame number.
     // Used for determining if a picture needs to be taken

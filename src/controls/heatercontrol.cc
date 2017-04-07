@@ -11,8 +11,7 @@ namespace RADIANCE{
   HeaterControl::HeaterControl(int gpio_pin):gpio_pin_(gpio_pin) {
     gpioInitialise();
     std::cout << gpioSetMode(gpio_pin_,PI_OUTPUT) << std::endl;
-    gpioWrite(gpio_pin_,0);
-
+    gpioWrite(gpio_pin_,kGpioOff);
     is_heater_on_ = false;
   }
 

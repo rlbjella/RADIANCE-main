@@ -8,7 +8,7 @@
 namespace RADIANCE{
 
   // Set sensor location based on serial number
-  InternalTemperatureSensor::InternalTemperatureSensor(std::string sensor_file_):sensor_file_(sensor_file_) {
+  InternalTemperatureSensor::InternalTemperatureSensor(std::string sensor_file):sensor_file_(sensor_file) {
   }
 
   // Reads temperature from temperature file

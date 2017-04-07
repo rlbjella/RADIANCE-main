@@ -1,5 +1,6 @@
 #include <chrono>
 #include <thread>
+#include <stdexcept>
 #include "spectrometer.h"
 #include <iostream>
 #include <algorithm>
@@ -15,7 +16,7 @@ namespace RADIANCE{
   // re-initalize.
   // Start by finding and retrieving the spectrometer handle, then configuring the measurements
   Spectrometer::Spectrometer() {
-/*
+
     // Initialize the library
     // 0 is connected via USB
     // If the spec cannot be found, restart the Pi and try again.
@@ -67,14 +68,14 @@ namespace RADIANCE{
     meas_config_.m_Control.m_LaserWidth    = 0; // Laser pulse width(unit is FPGA clock cycles), 0 is no laser pulse
     meas_config_.m_Control.m_LaserWaveLength = 1; // Peak wavelength of laser(nm), used for Raman spectroscopy
     meas_config_.m_Control.m_StoreToRam      = 0; // Number of spectra to be store to RAM
-*/
+
   }
 
   // Reads the spectrum with the setup handle. First calls AVS_Measure
   // which starts the read and then waits until a spectrum is
   // ready. Then reads and converts to float array for storage
   void Spectrometer::ReadSpectrum(std::array<float,kNumPixels>& f_spectrum) {
-/*
+
     // Configure the spectrometer with the measurement config
     // If the spectrometer is not found, restart the Pi
     if (AVS_PrepareMeasure(handle_,&meas_config_)!=ERR_SUCCESS) {
@@ -103,7 +104,7 @@ namespace RADIANCE{
     for (int i=0; i < kNumPixels; i++) {
       f_spectrum[i] = (float) d_spectrum[i];
     }
-*/
+
     for (int i=0; i < kNumPixels; i++) {
       f_spectrum[i] = 0;
     }
@@ -111,17 +112,16 @@ namespace RADIANCE{
 
   // Returns spectrometer internal temperature
   float Spectrometer::ReadSpectrometerTemperature() {
-/*
-    // Read the temperature as voltage
      float voltage;
-     AVS_GetAnalogIn(handle_,   // Spectrometer handle
-                     0, // Which input to use; 0 is the detector temperature
-                     &voltage); // Return value
+
+     // Get spectrometer temperature and return error code
+     if (AVS_GetAnalogIn(handle_, 0, &voltage)!=ERR_SUCCESS) {
+        throw std::runtime_error("Could not read spectrometer temperature sensor");
+     }
 
      // Need to convert the result to an actual measurement
      return Spectrometer::ConvertVoltageToTemperature(voltage);
-     */
-    return 0;
+     
   }
   // Converts the voltage into a temperature using a predefined polynomial
   float Spectrometer::ConvertVoltageToTemperature(float voltage) {
