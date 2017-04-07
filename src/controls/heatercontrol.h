@@ -27,8 +27,8 @@ namespace RADIANCE {
     bool is_heater_on_;
 
     // The heater on and off values range between 0 and 255
-    const int kPwmHeaterOff = 0;
-    const int kPwmHeaterOn = 255;
+    const int kGpioOn = 1;
+    const int kGpioOff = 0;
 
   };
 

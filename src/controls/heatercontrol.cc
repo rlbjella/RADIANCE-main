@@ -19,13 +19,13 @@ namespace RADIANCE{
   // Turn the heater on
   void HeaterControl::CommandHeaterOn() {
     std::cout << "Turning heater on" << std::endl; //DEBUg
-    std::cout << gpioWrite(gpio_pin_,1) << std::endl;
+    std::cout << gpioWrite(gpio_pin_,kGpioOn) << std::endl;
     is_heater_on_ = true;
   }
 
   // Turn the heater off
   void HeaterControl::CommandHeaterOff() {
-    gpioWrite(gpio_pin_,0);
+    gpioWrite(gpio_pin_,kGpioOff);
     is_heater_on_ = false;
   }
 
