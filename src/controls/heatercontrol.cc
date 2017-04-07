@@ -1,4 +1,5 @@
 #include <pigpio.h>
+#include <iostream>
 #include "heatercontrol.h"
 
 namespace RADIANCE{
@@ -9,19 +10,22 @@ namespace RADIANCE{
   // heater on and off.
   HeaterControl::HeaterControl(int gpio_pin):gpio_pin_(gpio_pin) {
     gpioInitialise();
-    gpioSetMode(gpio_pin_,PI_OUTPUT);
+    std::cout << gpioSetMode(gpio_pin_,PI_OUTPUT) << std::endl;
+    gpioWrite(gpio_pin_,0);
+
     is_heater_on_ = false;
   }
 
   // Turn the heater on
   void HeaterControl::CommandHeaterOn() {
-    gpioPWM(gpio_pin_,kPwmHeaterOn);
+    std::cout << "Turning heater on" << std::endl; //DEBUg
+    std::cout << gpioWrite(gpio_pin_,1) << std::endl;
     is_heater_on_ = true;
   }
 
   // Turn the heater off
   void HeaterControl::CommandHeaterOff() {
-    gpioPWM(gpio_pin_,kPwmHeaterOff);
+    gpioWrite(gpio_pin_,0);
     is_heater_on_ = false;
   }
 

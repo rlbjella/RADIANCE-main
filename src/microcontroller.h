@@ -29,8 +29,8 @@ namespace RADIANCE {
 
   private:
     // Minimum and maximum heater temperatures
-    static constexpr float kMinHeaterTemp = 1;
-    static constexpr float kMaxHeaterTemp = 3;
+    static constexpr float kMinHeaterTemp = 15;
+    static constexpr float kMaxHeaterTemp = 17;
 
     // Keeps track of frame number.
     // Used for determining if a picture needs to be taken
@@ -41,8 +41,8 @@ namespace RADIANCE {
     DataHandler data_handler_;
 
     // Initialize the heater controls. 
-    HeaterControl battery_heater_{16};      // GPIO pin number
-    HeaterControl spectrometer_heater_{18}; // GPIO pin number
+    HeaterControl spectrometer_heater_{23}; // GPIO pin number
+    HeaterControl battery_heater_{24};      // GPIO pin number
   };
 
 

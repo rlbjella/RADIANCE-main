@@ -69,7 +69,7 @@ namespace RADIANCE {
     }
 
     // Read environmental conditions
-    // Sensor is not used in heating calculations, so return 0
+    // These sensors are not used in heating calculations, so return 0 if they cannot be read
     try {
       frame_data_.external_temperature = external_temperature_sensor_.ReadTemperature();
     } catch (const std::exception& e) {
@@ -130,6 +130,10 @@ namespace RADIANCE {
   // Gets the frame_data struct for other routines
   DataHandler::frame_data_type DataHandler::GetFrameData() {return frame_data_;}
 
+
+template<typename T> std::ostream& BinaryWrite(std::ostream& stream, const T& value) {
+	return stream.write(reinterpret_cast<const char*>(&value), sizeof(T));
+}
   // Writes the frame data to the given file
   // Inputs:
   // file: The ofstream object to write to. If the file cannot be found/written to do nothing
@@ -140,26 +144,27 @@ namespace RADIANCE {
     if (file.good()) {
     
       // Write timestamp of measurement
-      file << frame_data_.time_stamp;
+      BinaryWrite(file,frame_data_.time_stamp);
 
       // Write the spectrometer measurements
       for (auto& i : frame_data_.spectrum) {
-        file << i;
+        BinaryWrite(file,i);
       }
       // Write the engineering/housekeeping measurements to the given file
-      file << frame_data_.spectrometer_temperature;
-      file << frame_data_.rpi_temperature;
-      file << frame_data_.upper_battery_temperature;
-      file << frame_data_.lower_battery_temperature;
-      file << frame_data_.storage_temperature;
-      file << frame_data_.external_temperature;
-      file << frame_data_.humidity;
+     	BinaryWrite(file,frame_data_.spectrometer_temperature);
+			BinaryWrite(file,frame_data_.rpi_temperature);
+      BinaryWrite(file,frame_data_.upper_battery_temperature);
+      BinaryWrite(file,frame_data_.lower_battery_temperature);
+      BinaryWrite(file,frame_data_.storage_temperature);
+      BinaryWrite(file,frame_data_.external_temperature);
+      BinaryWrite(file,frame_data_.humidity);
 
       // Write the attitude measurements
       for (auto& i : frame_data_.attitude_values) {
-        file << i;
+        BinaryWrite(file,i);
       }
 
+		file.flush();
     }
   }
 
@@ -168,6 +173,7 @@ namespace RADIANCE {
   // If image drives cannot be found, print debug information but do nothing
   void DataHandler::WriteImagesToFile() {
 
+	std::cout << "Writing images" << std::endl; //DEBUG
     // Use timestamp as filename
     std::string filename(std::to_string(frame_data_.time_stamp));
 

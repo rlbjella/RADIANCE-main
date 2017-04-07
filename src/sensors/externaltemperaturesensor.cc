@@ -1,4 +1,5 @@
 #include <pigpio.h>
+#include <stdexcept>
 #include <iostream>
 #include "externaltemperaturesensor.h"
 
@@ -14,8 +15,14 @@ namespace RADIANCE{
     // Create buffer and read two bytes from register
     char buf[2];
     gpioInitialise();
-    i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2);
-    return ConvertBlockDataToTemperature(buf);
+
+		// Success error code is number of bytes read(2)
+		// If not successful, throw runtime error
+		if (i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2)==2) {
+    	return ConvertBlockDataToTemperature(buf);
+		} else {
+			throw std::runtime_error("Could not read external temperature sensor");
+		}
   }
 
   // Converts two's complement block data to temperature measurement

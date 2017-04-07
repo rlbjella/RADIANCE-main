@@ -40,7 +40,7 @@ namespace RADIANCE{
     // The temperature information stats after 't='
     std::string temp_str(buf.substr(match+2));
 
-    // Convert the string to float
-    return std::stof(temp_str);
+    // Convert the string to float and convert to actual value
+    return std::stof(temp_str)/1000;
   }
 }

@@ -28,7 +28,7 @@ namespace RADIANCE {
 
     // The heater on and off values range between 0 and 255
     const int kPwmHeaterOff = 0;
-    const int kPwmHeaterOn = 0;
+    const int kPwmHeaterOn = 255;
 
   };
 

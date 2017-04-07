@@ -12,7 +12,7 @@ def sizeof_fmt(num, suffix='B'):
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
 
-drive_list = ['/mnt/slc_drive','/mnt/mlc1_drive','/mnt/mlc2_drive']
+drive_list = ['/mnt/slcdrive','/mnt/mlcdrive1','/mnt/mlcdrive2']
 # Offset from end of file, this is the total number of bytes of each measurement
 offset = 8240
 # Data readout format
@@ -33,9 +33,9 @@ for drive in drive_list:
         type = 'slc'
     else:
         print('Can\'t find drive type')
-        
+
     # Reads in datafile and unpacks data from binary format
-    with open(drive + 'datafile','rb') as f:
+    with open(drive + '/datafile','rb') as f:
         f.seek(-offset,os.SEEK_END)
         timestamp = struct.unpack('I',f.read(4))
         spectrum = struct.unpack('2048f',f.read(2048*4))
@@ -70,6 +70,9 @@ for drive in drive_list:
 
     # Print image file size if necessary
     if type=='mlc':
-        print('Image file size: {size}'.format(sizeof_fmt(size=os.path.getsize(drive+'imagefile'))))
+	if (os.path.isdir(drive+'/images')):
+                print('Number of images: {num}'.format(num=len(os.listdir(drive+'/images'))))
+	else:
+		print('Could not find image directory')
 
 print('------')

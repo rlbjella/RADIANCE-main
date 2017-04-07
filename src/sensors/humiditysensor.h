@@ -22,7 +22,7 @@ namespace RADIANCE {
     float ConvertFrequencyToHumidity(float freq);
 
     // Gpio pin to use
-    const int kGpioPin = 5;
+    const int kGpioPin = 17;
 
     // Pulse period in microseconds
     const int kPulseDelay = 20;
