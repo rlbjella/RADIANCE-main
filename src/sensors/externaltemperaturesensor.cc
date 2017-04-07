@@ -14,7 +14,6 @@ namespace RADIANCE{
   float ExternalTemperatureSensor::ReadTemperature() {
     // Create buffer and read two bytes from register
     char buf[2];
-    gpioInitialise();
 
 		// Success error code is number of bytes read(2)
 		// If not successful, throw runtime error
@@ -23,6 +22,9 @@ namespace RADIANCE{
 		} else {
 			throw std::runtime_error("Could not read external temperature sensor");
 		}
+
+    i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2);
+    return ConvertBlockDataToTemperature(buf);
   }
 
   // Converts two's complement block data to temperature measurement

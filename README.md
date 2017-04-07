@@ -29,7 +29,7 @@ Software repository for the RADIANCE senior project.
   pi@raspberrypi:~ $ crontab -e
   ```
   ```
-  @reboot sh /home/pi/RADIANCE-main/util/startup.sh &> /home/pi/stdout_pipe
+  @reboot sh /home/pi/RADIANCE-main/util/startup.sh &> /home/pi/radiance_log
   */5 * * * * /home/pi/RADIANCE-main/util/restart.sh >/dev/null 2>&1
   ```
   Note: The second line will cause the RPi to restart every 5 minutes if the RADIANCE software is not running.
@@ -58,7 +58,10 @@ Software repository for the RADIANCE senior project.
   ```
   pi@raspberrypi:~ $ sudo service watchdog start
   ```
-
+- Create the log pipe:
+```
+  pi@raspberrypi:~ $ sudo mkfifo radiance_log
+  ```
 # Sync with Git and Compile
 To download/compile:
 ```
