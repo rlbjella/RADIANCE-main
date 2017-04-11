@@ -9,14 +9,15 @@ namespace RADIANCE {
   class AttitudeSensor {
 
   public:
-    // Initialize attitude sensor
+    // Setup GPIO pins and open SPI device
     AttitudeSensor();
-
+    
     // Constant number of photodiodes
     const static int kNumPhotodiodes = 4;
 
     // Returns all four adc measurements
-    void ReadAttitude(std::array<float,kNumPhotodiodes>& f_current);
+    // Returns false if the read failed
+    bool ReadAttitude(std::array<float,kNumPhotodiodes>& f_current);
 
   private:
 

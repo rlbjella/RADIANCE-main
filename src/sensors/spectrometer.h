@@ -14,10 +14,11 @@ namespace RADIANCE {
     static const int kNumPixels = 2048;
 
     // Return a spectrum measurement into the given array
-    void ReadSpectrum(std::array<float,kNumPixels>& spectrum);
+    bool ReadSpectrum(std::array<float,kNumPixels>& spectrum);
 
     // Return spectrometer temperature
-    float ReadSpectrometerTemperature();
+    // Returns false if read failed
+    bool ReadSpectrometerTemperature(float& temp);
   private:
 
     // Spectrometer reference handle

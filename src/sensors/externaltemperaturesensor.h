@@ -10,7 +10,8 @@ public:
     ExternalTemperatureSensor();
 
     // Return a temperature measurement
-    float ReadTemperature();
+    // Returns false if read failed
+    bool ReadTemperature(float& temp);
 private:
 
     // Convert i2c data to temperature

@@ -6,16 +6,16 @@
 
 namespace RADIANCE{
 
-    // Set to one if reset is necessary
-    static int reset_counter=1;
+  // Set to one if reset is necessary
+  static int reset_counter=1;
 
-    // Pulse track counter
-    static int pulse_counter=1;
+  // Pulse track counter
+  static int pulse_counter=1;
   
   // Callback function for each edge
   void HumiditySensor::EdgeCallbackFunction(int gpio, int level, uint32_t tick)
   {
-		std::cout << "got callback" << std::endl; //DEBUG
+    std::cout << "got callback" << std::endl; //DEBUG
     if (reset_counter)
       {
         reset_counter = 0;
@@ -57,19 +57,21 @@ namespace RADIANCE{
   // Reads a humidity measurement. This requires finding the frequency
   // of the wave and then converting that measurement to percent
   // relative humidity
-  float HumiditySensor::ReadHumidity(){
+  // Returns false if the read failed
+  bool HumiditySensor::ReadHumidity(float& humidity){
     reset_counter = 1;
 
-		// Check if any pulses are detected. 
-		// If not, throw an error
-		if (pulse_counter<1) {
-			std::runtime_error("Could not detect humidity sensor pulses");
-		}
+    // Check if any pulses are detected. 
+    // If not, throw an error
+    if (pulse_counter<1) {
+      return false;
+    }
 
     float period = pulse_counter/kPulseDelay;
-		float frequency = 1/period;
+    float frequency = 1/period;
 
-    return ConvertFrequencyToHumidity(frequency);
+    humidity = ConvertFrequencyToHumidity(frequency);
+    return true;
   }
 
   // Converts frequency to humidity using a polynomial fit equation

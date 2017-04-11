@@ -16,7 +16,13 @@ namespace RADIANCE {
   // DataHandler encapsulates the data transfer process
   // The read functions set the data in the science data struct
   class DataHandler{
+    
+  private:
+  // Takes a value and writes the binary information to given stream
+  template <class T> std::ostream& BinaryWrite(std::ostream& stream, const T& value);
+
   public:
+    
     // Reads a measurement from each sensor and places it into the
     // science data struct.
     void ReadSensorData(const int frame_counter);
@@ -35,8 +41,7 @@ namespace RADIANCE {
       float storage_temperature;
       float external_temperature;
       float humidity;
-      std::array<float,AttitudeSensor::kNumPhotodiodes> attitude_values;
-      std::array<unsigned char,Camera::kImageSize> image;
+      std::array<float,4> attitude_values;
     };
 
     // Gets the frame_data struct for other routines
@@ -48,15 +53,15 @@ namespace RADIANCE {
     frame_data_type frame_data_;
 
     // Sensor data members
-    Spectrometer spectrometer_;
-    HumiditySensor humidity_sensor_;
-    RPiTemperatureSensor rpi_temperature_sensor_;
-    InternalTemperatureSensor upper_battery_temperature_sensor_{"10-00080336550e"}; // Sensor serial number
-    InternalTemperatureSensor lower_battery_temperature_sensor_{"10-000803362138"};
-    InternalTemperatureSensor storage_temperature_sensor_{"10-00080336329d"};
-    ExternalTemperatureSensor external_temperature_sensor_;
     AttitudeSensor attitude_sensor_;
     Camera camera_;
+    ExternalTemperatureSensor external_temperature_sensor_;
+    HumiditySensor humidity_sensor_;
+    InternalTemperatureSensor lower_battery_temperature_sensor_{"10-000803362138"};
+    InternalTemperatureSensor storage_temperature_sensor_{"10-00080336329d"};
+    InternalTemperatureSensor upper_battery_temperature_sensor_{"10-00080336550e"}; // Sensor serial number
+    RPiTemperatureSensor rpi_temperature_sensor_;
+    Spectrometer spectrometer_;
 
     // Storage data objects for regular data
     // These are kept open for performance
@@ -66,10 +71,8 @@ namespace RADIANCE {
 
     // Writes the frame data to the given file
     void WriteDataToFile(std::ofstream& file);
-
-    // Writes the images to the given file
-    void WriteImagesToFile();
   };
+
 
 } // namespace RADIANCE
 #endif //RADIANCE_SRC_DATAHANDLER_H_

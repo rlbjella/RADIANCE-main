@@ -15,7 +15,8 @@ namespace RADIANCE {
     HumiditySensor();
 
     // Return a humidity measurement
-    float ReadHumidity();
+    // Returns false if the read failed
+    bool ReadHumidity(float& humidity);
     
   private:
     // Convert a measurement from the humidity sensor to a humidity measurement

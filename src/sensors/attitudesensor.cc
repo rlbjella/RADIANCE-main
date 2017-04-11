@@ -7,7 +7,7 @@
 #include "attitudesensor.h"
 
 namespace RADIANCE {
-  // Initialization function. Configure GPIO pins for CS and set high,
+  // Configure GPIO pins for CS and set high,
   // open SPI device. Set feedback resistances and ADC resolution
   AttitudeSensor::AttitudeSensor(){
 
@@ -38,7 +38,8 @@ namespace RADIANCE {
   }
 
   // Returns the attitude angle
-  void AttitudeSensor::ReadAttitude(std::array<float,kNumPhotodiodes>& f_current){
+  // Returns false if the read failed
+  bool AttitudeSensor::ReadAttitude(std::array<float,kNumPhotodiodes>& f_current){
 
     for (int i = 0; i < kNumPhotodiodes-1; i ++) {
       f_current[i] = ReadAdc(i);

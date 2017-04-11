@@ -44,7 +44,12 @@ Software repository for the RADIANCE senior project.
   UUID=5c0d5816-9b30-4041-a98d-71844d1dd6b9    /mnt/mlcdrive1 ext4  data=journal  0  0
   UUID=8f7a6e96-8b9a-428c-bb17-ddd595607f23    /mnt/mlcdrive2 ext4  data=journal  0  0
   ```
-  Exit and save the `fstab` file by doing a Ctrl+X, type "Y" to save, then press Enter. 
+  Exit and save the `fstab` file by doing a Ctrl+X, type "Y" to save, then press Enter.  Restart the pi and make sure the folders are all mounted properly. Create an "images" folder in each mlc drive:
+
+  ```
+  mkdir /mnt/mlcdrive1/images
+  mkdir /mnt/mlcdrive2/images
+  ```
   
 - Enable the hardware watchdog: https://www.domoticz.com/wiki/Setting_up_the_raspberry_pi_watchdog
   ```

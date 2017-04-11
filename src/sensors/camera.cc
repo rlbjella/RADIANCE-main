@@ -1,40 +1,16 @@
-#include <stdexcept>
-#include <iostream>
-#include <fstream>
-#include <chrono>
-#include <thread>
+#include <cstdlib>
 #include "camera.h"
-#include <algorithm>
+#include <string>
 
 namespace RADIANCE{
 
-  // Initialize the camera object by opening the raspicam object, configuring
-  // the image and then sleeping while the camera stabilizes
-  Camera::Camera() {
-
-    // If successful, configure the image
-    // If not able to open a camera object, do nothing
-    if (raspicam_still_.open()) {
-      // Configure the image
-      raspicam_still_.setCaptureSize(Camera::kImageWidth,Camera::kImageHeight);
-      raspicam_still_.setEncoding(raspicam::RASPICAM_ENCODING_JPEG);
-
-      // Let the camera stabilize
-      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-
-    } else {
-      std::cerr<< "Error opening camera" <<std::endl;
-    }
-  }
-
   // Reads and writes the camera image
-  void Camera::ReadImage(std::array<unsigned char,Camera::kImageSize>& image_data) {
-
-    // Retrieve the image in rgb format
-		// If not able to retrieve the image, throw an error
-    if (!raspicam_still_.grab_retrieve(image_data.data(),Camera::kImageSize)) {
-			throw std::runtime_error("Could not retrieve image");
-		}
+  // Calls the system utility 'raspistill' and then copies the images using tee
+  // Returns true if read succeeds
+  // Please do not judge me for writing this garbage
+  bool Camera::TakePicture(int time_stamp) {
+    std::system(("raspistill -w 640 -h 480 -o - | tee /mnt/mlcdrive1/images/" + std::to_string(time_stamp) +  "/mnt/mlcdrive2/images/" + std::to_string(time_stamp)).c_str());
+    return true;
   }
 
 }

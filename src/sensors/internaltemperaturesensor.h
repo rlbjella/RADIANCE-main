@@ -13,7 +13,7 @@ namespace RADIANCE {
     InternalTemperatureSensor(std::string serial_str);
 
     // Return a temperature measurement
-    float ReadTemperature();
+    bool ReadTemperature(float& temp);
   private:
 
     // Serial number of device, used for opening the sensor file

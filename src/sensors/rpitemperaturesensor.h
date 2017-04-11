@@ -9,14 +9,11 @@ namespace RADIANCE {
 
   public:
 
-    // Initialize the sensor
-    RPiTemperatureSensor();
-
     // Return a temperature measurement
-    float ReadTemperature();
+    bool ReadTemperature(float& temp);
   private:
     // Location of temperature sensor file
-    const std::string kLocationStr;
+    const std::string kLocationStr{"/sys/class/thermal/thermal_zone0/temp"};
   };
 
 }

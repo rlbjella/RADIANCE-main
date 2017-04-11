@@ -13,16 +13,15 @@ namespace RADIANCE{
 
   // Reads temperature from temperature file
   // Opens the sensor file, filter to the temperature and covert to celcius
-  // Throws runtime_error if the temperature file could not be read
-  float InternalTemperatureSensor::ReadTemperature() {
+  // Returns false if read failed
+  bool InternalTemperatureSensor::ReadTemperature(float& temp) {
 
     // Open the file and save the file handle
     std::ifstream temp_file(kLocationStrPrefix + sensor_file_ + kLocationStrPostfix);
 
-    // If the file cannot be read from throw runtime error
+    // If the file cannot be read from return error
     if (!temp_file.good()) {
-      std::string error_message("Could not open temperature file: " + sensor_file_);
-      throw std::runtime_error(error_message);
+      return false;
     }
 
     // Read the file into a buffer
@@ -32,15 +31,16 @@ namespace RADIANCE{
     // Check if the file has the standard format
     int match = buf.find("t=");
 
+    // If the format string cannot be found return error
     if (match == std::string::npos) {
-      std::string error_message("Temperature file does not contain proper format: " + sensor_file_);
-      throw std::runtime_error(error_message);
+      return false;
     }
     // Cut the string to just the temperature information
-    // The temperature information stats after 't='
+    // The temperature information stats after 't=' so add 2
     std::string temp_str(buf.substr(match+2));
 
     // Convert the string to float and convert to actual value
-    return std::stof(temp_str)/1000;
+    temp = std::stof(temp_str)/1000;
+    return true;
   }
 }

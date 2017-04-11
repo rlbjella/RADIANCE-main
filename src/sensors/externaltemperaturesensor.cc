@@ -1,6 +1,6 @@
 #include <pigpio.h>
-#include <stdexcept>
 #include <iostream>
+#include <memory>
 #include "externaltemperaturesensor.h"
 
 namespace RADIANCE{
@@ -11,32 +11,32 @@ namespace RADIANCE{
   }
 
   // Read temperature from sensor
-  float ExternalTemperatureSensor::ReadTemperature() {
-    // Create buffer and read two bytes from register
+  // Create buffer and read two bytes from register
+  // Success error code is number of bytes read(2)
+  bool ExternalTemperatureSensor::ReadTemperature(float& temp) {
     char buf[2];
 
-		// Success error code is number of bytes read(2)
-		// If not successful, throw runtime error
-		if (i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2)==2) {
-    	return ConvertBlockDataToTemperature(buf);
-		} else {
-			throw std::runtime_error("Could not read external temperature sensor");
-		}
+    // Check if measurement failed
+    if (i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2)==2) {
+      temp = ConvertBlockDataToTemperature(buf);
+      return true;
+    } else {
+      return false;
+    }
 
-    i2cReadI2CBlockData(file_handle_,kTempRegister,buf,2);
-    return ConvertBlockDataToTemperature(buf);
   }
 
   // Converts two's complement block data to temperature measurement
-  float ExternalTemperatureSensor::ConvertBlockDataToTemperature(char* buf) {
+  float ExternalTemperatureSensor::ConvertBlockDataToTemperature(char buf[2]) {
     // Combines high and low measurements
-    int meas = buf[0] << 4 | buf[1] >> 4;
+    int counts = buf[0] << 4 | buf[1] >> 4;
 
     // Check if temperature is negative
     // If negative, take complement and add 1
     if (buf[0] & 0x10000000) {
-      meas = ~meas+1;
+      counts = ~counts+1;
     }
-    return meas*kCountsToCelsius;
+
+    return counts*kCountsToCelsius;
   }
 }
