@@ -28,10 +28,10 @@ namespace RADIANCE {
     ltc2470* adc_;
 
     // Resistor values in ohms
-    const unsigned int kResistorValue1 = 5000;
-    const unsigned int kResistorValue2 = 5000;
-    const unsigned int kResistorValue3 = 5000;
-    const unsigned int kResistorValue4 = 5000;
+    const unsigned int kResistorValue1 = 1000;
+    const unsigned int kResistorValue2 = 1000;
+    const unsigned int kResistorValue3 = 1000;
+    const unsigned int kResistorValue4 = 1000;
 
 	// Resolution of ADC, equal to 2^(bits)-1
 	const unsigned int kAdcResolution = (std::pow(2,16) - 1);
